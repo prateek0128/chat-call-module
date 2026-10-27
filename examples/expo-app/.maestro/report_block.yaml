@@ -1,0 +1,38 @@
+# Block / unblock Bob from the chat menu, report him (also blocks), unblock in Settings > Blocked users.
+appId: com.example.commskitdemo
+name: Report and block
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      USER_ID: U1
+      MODE: both
+- runFlow: subflows/open_bob.yaml
+# Block from the header menu -> blocked composer
+- tapOn: "More options"
+- tapOn: "Block"
+- extendedWaitUntil:
+    visible: "Unblock Bob"
+    timeout: 10000
+- tapOn: "Unblock Bob"
+- extendedWaitUntil:
+    visible: "Message"
+    timeout: 10000
+# Report (ReportSheet, "Also block" is on by default)
+- tapOn: "More options"
+- tapOn: "Report"
+- tapOn: "Spam"
+- tapOn: "Send report"
+- tapOn: "Done"
+- assertVisible: "Unblock Bob"
+# Settings > Blocked users -> Unblock
+- tapOn: "Back"
+- tapOn:
+    id: "open-settings"
+- tapOn:
+    id: "settings-blocked"
+- extendedWaitUntil:
+    visible: "Unblock Bob"
+    timeout: 10000
+- tapOn: "Unblock Bob"
+- assertNotVisible: "Unblock Bob"

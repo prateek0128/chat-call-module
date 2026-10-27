@@ -1,0 +1,12 @@
+{
+  "call_id": "<uuid>",
+  "call_type": "video",
+  "caller_id": "B",
+  "caller_name": "B",
+  "chat_id": "<id>",
+  "receiver_id": "B",
+  "status": "calling",
+  "timestamp": "<ts>",
+  "type": "call_initiated",
+  "webrtc_session_id": "<uuid>"
+}

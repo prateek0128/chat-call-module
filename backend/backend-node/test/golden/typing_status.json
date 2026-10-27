@@ -1,0 +1,7 @@
+{
+  "chat_id": "<id>",
+  "is_typing": true,
+  "timestamp": "<ts>",
+  "type": "typing_status",
+  "user_id": "A"
+}

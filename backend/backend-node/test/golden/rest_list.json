@@ -1,0 +1,24 @@
+[
+  {
+    "id": "<id>",
+    "last_message": {
+      "content": "while you were away",
+      "file_name": null,
+      "file_size": null,
+      "file_type": null,
+      "file_url": null,
+      "is_delivered": true,
+      "is_read": false,
+      "message_type": "text",
+      "sender_id": "A",
+      "timestamp": "<ts>"
+    },
+    "other_user": {
+      "avatar": "https://img/b.png",
+      "id": "B",
+      "username": "Bob"
+    },
+    "unread_count": 1,
+    "updated_at": "<ts>"
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "body": {
+    "detail": "You cannot block or report yourself."
+  },
+  "status": 422
+}

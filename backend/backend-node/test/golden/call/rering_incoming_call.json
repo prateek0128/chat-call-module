@@ -1,0 +1,16 @@
+{
+  "call_id": "<uuid>",
+  "call_type": "audio",
+  "caller_avatar": "https://img/a.png",
+  "caller_id": "A",
+  "caller_name": "Alice",
+  "chat_id": "<id>",
+  "receiver_id": "B",
+  "sdp": {
+    "sdp": "v=0 offer",
+    "type": "offer"
+  },
+  "timestamp": "<ts>",
+  "type": "incoming_call",
+  "webrtc_session_id": "<uuid>"
+}

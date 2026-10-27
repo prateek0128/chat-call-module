@@ -1,0 +1,12 @@
+{
+  "call_id": "<uuid>",
+  "call_type": "audio",
+  "caller_id": "A",
+  "chat_id": "<id>",
+  "end_reason": "no_answer",
+  "receiver_id": "B",
+  "status": "missed",
+  "timestamp": "<ts>",
+  "type": "call_missed",
+  "webrtc_session_id": "<uuid>"
+}

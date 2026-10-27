@@ -1,0 +1,32 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Node
+node_modules/
+
+# Env / secrets
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local demo data and test output
+examples/backend/demo-server-python/.demo_data/
+examples/backend/demo-server-python/ui_tests/screenshots/
+
+# Web build output and e2e screenshots
+dist/
+dist-check/
+examples/web-app/e2e/screenshots/
+
+# Leftover from the folder restructure (locked by Windows): delete backend/examples by hand, then remove this line
+backend/examples/

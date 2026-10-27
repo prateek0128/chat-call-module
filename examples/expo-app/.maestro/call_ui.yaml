@@ -1,0 +1,29 @@
+# Start a call to Bob, see the calling screen, hang up. (Bob doesn't need to answer.)
+appId: com.example.commskitdemo
+name: Call UI
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      USER_ID: U1
+      MODE: both
+- runFlow: subflows/open_bob.yaml
+- tapOn: "Call Bob"
+# Microphone permission (first call only)
+- runFlow:
+    when:
+      visible: "While using the app"
+    commands:
+      - tapOn: "While using the app"
+- runFlow:
+    when:
+      visible: "Allow"
+    commands:
+      - tapOn: "Allow"
+- extendedWaitUntil:
+    visible: "(Calling…|Ringing…)"
+    timeout: 15000
+- tapOn: "Hang up"
+- extendedWaitUntil:
+    notVisible: "(Calling…|Ringing…)"
+    timeout: 10000

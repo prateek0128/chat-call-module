@@ -1,0 +1,28 @@
+{
+  "type": "res_users",
+  "users": [
+    {
+      "avatar": "https://img/b.png",
+      "blocked_by_other": false,
+      "chat_id": "<id>",
+      "is_blocked": false,
+      "last_message": {
+        "content": "Missed voice call",
+        "file_name": null,
+        "file_size": null,
+        "file_type": null,
+        "file_url": null,
+        "is_delivered": true,
+        "is_read": false,
+        "message_type": "audio_call",
+        "sender_id": "A",
+        "timestamp": "<ts>"
+      },
+      "status": "online",
+      "unread_count": 0,
+      "updated_at": "<ts>",
+      "user_id": "B",
+      "username": "Bob"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+# Log in as Alice, open Bob, send a message, see it in the list.
+appId: com.example.commskitdemo
+name: Login and chat
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      USER_ID: U1
+      MODE: both
+- runFlow: subflows/open_bob.yaml
+- tapOn: "Message"
+- inputText: "Hello from Maestro"
+- tapOn: "Send message"
+- extendedWaitUntil:
+    visible: ".*Hello from Maestro.*"
+    timeout: 10000
+- tapOn: "Back"
+- assertVisible: "Bob.*Hello from Maestro.*"

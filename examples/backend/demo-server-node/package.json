@@ -1,0 +1,16 @@
+{
+  "name": "commskit-demo-server-node",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "DEV-ONLY demo server for the comms kit, Node edition (same behaviour as examples/backend/demo-server-python/demo_server.py).",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.0.0",
+    "commskit-node": "file:../../../backend/backend-node",
+    "jose": "^5.9.6",
+    "kysely": "^0.27.4"
+  }
+}

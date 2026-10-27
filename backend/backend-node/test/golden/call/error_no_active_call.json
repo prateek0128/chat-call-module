@@ -1,0 +1,6 @@
+{
+  "call_id": "<uuid>",
+  "context": "call",
+  "error": "No active call found.",
+  "type": "error"
+}

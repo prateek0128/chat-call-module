@@ -1,0 +1,93 @@
+{
+  "expo": {
+    "name": "Commskit Demo",
+    "slug": "commskit-demo",
+    "scheme": "commskitdemo",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.example.commskitdemo",
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        },
+        "NSPhotoLibraryUsageDescription": "Choose photos to send in chats and to use as a chat wallpaper."
+      }
+    },
+    "android": {
+      "package": "com.example.commskitdemo",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "softwareKeyboardLayoutMode": "resize"
+    },
+    "plugins": [
+      [
+        "commskit",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to use the microphone for voice calls."
+        }
+      ],
+      "@config-plugins/react-native-webrtc",
+      [
+        "expo-notifications",
+        {
+          "color": "#4F46E5"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Choose photos to send in chats and to use as a chat wallpaper.",
+          "cameraPermission": false
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true,
+            "extraMavenRepos": [
+              "../node_modules/@notifee/react-native/android/libs"
+            ]
+          },
+          "ios": {}
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to use the microphone for voice calls."
+        }
+      ],
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Choose photos to send in chats and to use as a chat wallpaper.",
+          "savePhotosPermission": "Save photos and videos from chats to your library.",
+          "isAccessMediaLocationEnabled": false
+        }
+      ],
+      "expo-dev-client"
+    ],
+    "extra": {
+      "apiUrl": "http://192.168.1.10:8000",
+      "apiUrlNote": "Default server for the login screen: http://<your PC's LAN IP>:8000 (the demo server started with --host 0.0.0.0). It can be changed on the login screen and is remembered on the device."
+    },
+    "experiments": {
+      "tsconfigPaths": false
+    }
+  }
+}

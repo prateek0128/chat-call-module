@@ -1,0 +1,10 @@
+{
+  "call_id": "<uuid>",
+  "from_user_id": "A",
+  "sdp": {
+    "sdp": "v=0 offer",
+    "type": "offer"
+  },
+  "timestamp": "<ts>",
+  "type": "sdp_offer"
+}

@@ -1,0 +1,5 @@
+{
+  "context": "moderation",
+  "error": "You cannot block or report yourself.",
+  "type": "error"
+}

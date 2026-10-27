@@ -1,0 +1,123 @@
+{
+  "name": "commskit-node",
+  "version": "0.1.0",
+  "description": "Node.js/TypeScript server for the commskit wire protocol: chat, calls, moderation, push. Sibling of the Python `commskit` backend.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./core": {
+      "types": "./dist/core.d.ts",
+      "import": "./dist/core.js"
+    },
+    "./chat": {
+      "types": "./dist/chat.d.ts",
+      "import": "./dist/chat.js"
+    },
+    "./call": {
+      "types": "./dist/call.d.ts",
+      "import": "./dist/call.js"
+    },
+    "./moderation": {
+      "types": "./dist/moderation.d.ts",
+      "import": "./dist/moderation.js"
+    },
+    "./integration": {
+      "types": "./dist/integration.d.ts",
+      "import": "./dist/integration.js"
+    },
+    "./push": {
+      "types": "./dist/push.d.ts",
+      "import": "./dist/push.js"
+    },
+    "./redis": {
+      "types": "./dist/redis.d.ts",
+      "import": "./dist/redis.js"
+    },
+    "./s3": {
+      "types": "./dist/s3.d.ts",
+      "import": "./dist/s3.js"
+    },
+    "./fastify": {
+      "types": "./dist/fastify.d.ts",
+      "import": "./dist/fastify.js"
+    },
+    "./express": {
+      "types": "./dist/express.d.ts",
+      "import": "./dist/express.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "smoke": "node scripts/dist-smoke.mjs"
+  },
+  "dependencies": {
+    "jose": "^5.9.6",
+    "kysely": "^0.27.4",
+    "ws": "^8.18.0"
+  },
+  "peerDependencies": {
+    "better-sqlite3": "^11.0.0",
+    "express": "^4.19.0 || ^5.0.0",
+    "fastify": "^4.28.0 || ^5.0.0",
+    "pg": "^8.11.0",
+    "@aws-sdk/client-s3": "^3.600.0",
+    "@aws-sdk/s3-request-presigner": "^3.600.0",
+    "ioredis": "^5.4.0",
+    "sharp": "^0.33.0"
+  },
+  "peerDependenciesMeta": {
+    "better-sqlite3": {
+      "optional": true
+    },
+    "express": {
+      "optional": true
+    },
+    "fastify": {
+      "optional": true
+    },
+    "pg": {
+      "optional": true
+    },
+    "@aws-sdk/client-s3": {
+      "optional": true
+    },
+    "@aws-sdk/s3-request-presigner": {
+      "optional": true
+    },
+    "ioredis": {
+      "optional": true
+    },
+    "sharp": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.14.0",
+    "@types/pg": "^8.11.10",
+    "@types/ws": "^8.5.12",
+    "better-sqlite3": "^11.5.0",
+    "express": "^4.21.0",
+    "fastify": "^4.28.1",
+    "pg": "^8.13.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  }
+}

@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+<title>Comms Kit Demo</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%234F46E5'/%3E%3Cpath d='M9 22.5 10.2 19A7 7 0 1 1 13 21.6Z' fill='none' stroke='white' stroke-width='2.2' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="demo.css">
+<script>
+  // Apply the stored mode + chat theme before first paint (no flash). localStorage can throw (private mode, blocked storage).
+  try { var t = localStorage.getItem("commsDemo.theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+  try {
+    var a = JSON.parse(localStorage.getItem("commsDemo.appearance") || "{}");
+    if (a && /^(indigo|rose|emerald|ocean|amber|violet|graphite)$/.test(a.preset)) document.documentElement.dataset.preset = a.preset;
+  } catch (e) {}
+</script>
+</head>
+<body>
+
+<!-- Icons: stroke icons (Lucide-style) + two filled call glyphs. Referenced with <use href="#i-…">. -->
+<svg xmlns="http://www.w3.org/2000/svg" class="sprite" aria-hidden="true">
+  <defs>
+    <path id="p-handset" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/>
+  </defs>
+  <symbol id="i-phone" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><use href="#p-handset"/></g></symbol>
+  <symbol id="i-phone-in" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2v6h6"/><path d="m22 2-6 6"/><use href="#p-handset"/></g></symbol>
+  <symbol id="i-phone-out" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 8V2h-6"/><path d="m16 8 6-6"/><use href="#p-handset"/></g></symbol>
+  <symbol id="i-phone-missed" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-6 6"/><path d="m16 2 6 6"/><use href="#p-handset"/></g></symbol>
+  <symbol id="i-phone-fill" viewBox="0 0 24 24"><path fill="currentColor" d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24 11.4 11.4 0 0 0 3.57.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1.02z"/></symbol>
+  <symbol id="i-hangup" viewBox="0 0 24 24"><path fill="currentColor" d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85a1 1 0 0 1-.7.28 1 1 0 0 1-.71-.29L.29 13.08a1 1 0 0 1 0-1.41C3.34 8.78 7.46 7 12 7s8.66 1.78 11.71 4.67a1 1 0 0 1 0 1.41l-2.48 2.48a1 1 0 0 1-1.41.01 11.3 11.3 0 0 0-2.67-1.85 1 1 0 0 1-.56-.9v-3.1A15 15 0 0 0 12 9"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/></g></symbol>
+  <symbol id="i-mic-off" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 2 20 20"/><path d="M18.89 13.23A7.12 7.12 0 0 0 19 12v-2"/><path d="M5 10v2a7 7 0 0 0 12 5"/><path d="M15 9.34V5a3 3 0 0 0-5.68-1.33"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12"/><path d="M12 19v3"/></g></symbol>
+  <symbol id="i-speaker" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></g></symbol>
+  <symbol id="i-clip" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path fill="currentColor" d="M3.4 20.4 20.85 12.92a1 1 0 0 0 0-1.84L3.4 3.6a.99.99 0 0 0-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></g></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></g></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></g></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-dcheck" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 7 17l-5-5"/><path d="m22 10-7.5 7.5L13 16"/></g></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></g></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></g></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/></g></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></g></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></g></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></g></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></g></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></g></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></g></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></symbol>
+  <symbol id="i-auto" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18a9 9 0 0 0 0-18Z" fill="currentColor"/></g></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></g></symbol>
+  <symbol id="i-palette" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a10 10 0 1 1 10-10c0 2.8-2.2 4-4 4h-1.8a1.7 1.7 0 0 0-1.3 2.8c.3.3.4.7.4 1.1A2.1 2.1 0 0 1 12 22Z"/><circle cx="13.5" cy="6.5" r="1" fill="currentColor"/><circle cx="17.5" cy="10.5" r="1" fill="currentColor"/><circle cx="6.5" cy="12.5" r="1" fill="currentColor"/><circle cx="8.5" cy="7.5" r="1" fill="currentColor"/></g></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="12" cy="5" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="12" cy="19" r="1.9"/></g></symbol>
+  <symbol id="i-image-plus" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3-3-9 9"/><path d="M19 16v6"/><path d="M16 19h6"/></g></symbol>
+  <symbol id="i-refresh"viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></g></symbol>
+</svg>
+
+<!-- ============================================================ sign in -->
+<main id="login" class="login">
+  <div class="login-card">
+    <div class="login-top">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg><use href="#i-chat"/></svg></span>
+        <div>
+          <h1>Comms Kit</h1>
+          <p class="brand-sub">Chat &amp; voice-call demo</p>
+        </div>
+      </div>
+      <button class="icon-btn theme-btn" type="button" aria-label="Theme"><svg><use href="#i-auto"/></svg></button>
+    </div>
+    <p class="login-lead">Choose who you are. Open a second tab as someone else to message or call them.</p>
+    <div class="mode-field">
+      <span class="mode-label" id="modeLabelLogin">Use</span>
+      <div class="mode-switch" role="radiogroup" aria-labelledby="modeLabelLogin"></div>
+      <p class="mode-hint" hidden></p>
+    </div>
+    <ul id="whoList" class="who-list" role="list" aria-busy="true">
+      <li class="who skeleton-row" aria-hidden="true"><span class="sk sk-avatar"></span><span class="sk sk-line"></span></li>
+      <li class="who skeleton-row" aria-hidden="true"><span class="sk sk-avatar"></span><span class="sk sk-line"></span></li>
+      <li class="who skeleton-row" aria-hidden="true"><span class="sk sk-avatar"></span><span class="sk sk-line"></span></li>
+    </ul>
+    <div class="login-foot">
+      <div id="features" class="feature-chips" aria-label="Server features"></div>
+      <span class="dev-note">Dev only · tokens for anyone</span>
+    </div>
+  </div>
+</main>
+
+<!-- ============================================================ app -->
+<div id="app" class="app" data-pane="list" hidden>
+  <div id="banner" class="banner" role="status" aria-live="polite" hidden>
+    <span class="banner-text"><span class="spinner" aria-hidden="true"></span><span id="bannerText">Connecting…</span></span>
+    <button id="bannerRetry" class="text-btn" type="button" hidden>Retry now</button>
+  </div>
+
+  <div class="panes">
+    <!-- conversation list -->
+    <aside id="listPane" class="pane list-pane" aria-label="Conversations">
+      <header class="bar list-bar">
+        <span id="meAvatar"></span>
+        <div class="bar-title">
+          <h2 id="listTitle">Chats</h2>
+          <span id="connState" class="conn-state" data-state="connecting"><span class="dot" aria-hidden="true"></span><span id="connText">Connecting…</span></span>
+        </div>
+        <button class="icon-btn" id="appearanceBtn" type="button" aria-label="Appearance: mode, theme and wallpaper" aria-haspopup="dialog" title="Appearance"><svg><use href="#i-palette"/></svg></button>
+        <button class="icon-btn" id="devBtn" type="button" aria-label="Show WebSocket frames" aria-expanded="false" aria-controls="devDrawer"><svg><use href="#i-code"/></svg></button>
+        <button class="icon-btn" id="logoutBtn" type="button" aria-label="Switch user"><svg><use href="#i-logout"/></svg></button>
+      </header>
+      <div class="search">
+        <svg aria-hidden="true"><use href="#i-search"/></svg>
+        <input type="search" id="search" placeholder="Search" aria-label="Search conversations" autocomplete="off" enterkeyhint="search">
+      </div>
+      <div class="mode-row">
+        <div class="mode-switch" role="radiogroup" aria-label="Features to use: chat, calls or both"></div>
+        <p class="mode-hint" hidden></p>
+      </div>
+      <ul id="convoList" class="convo-list" role="list" aria-label="Conversations"></ul>
+    </aside>
+
+    <!-- conversation -->
+    <section id="chatPane" class="pane chat-pane" aria-label="Conversation">
+      <div id="welcome" class="welcome">
+        <div class="welcome-card">
+          <span class="welcome-mark" aria-hidden="true"><svg><use href="#i-chat"/></svg></span>
+          <h2 id="welcomeTitle">Select a conversation</h2>
+          <p id="welcomeText">Pick someone on the left to start messaging or calling.</p>
+        </div>
+      </div>
+
+      <div id="thread" class="thread" hidden>
+        <header class="bar chat-bar">
+          <button class="icon-btn back-btn" id="backBtn" type="button" aria-label="Back to conversations"><svg><use href="#i-back"/></svg></button>
+          <span id="peerAvatar"></span>
+          <div class="peer-meta">
+            <h2 id="peerName"></h2>
+            <span id="peerSub" class="peer-sub"></span>
+          </div>
+          <button class="icon-btn call-btn" id="callBtn" type="button" aria-label="Voice call" hidden><svg><use href="#i-phone"/></svg></button>
+          <button class="icon-btn" id="moreBtn" type="button" aria-label="More options" aria-haspopup="menu" aria-expanded="false" aria-controls="chatMenu"><svg><use href="#i-more"/></svg></button>
+        </header>
+
+        <div id="threadBody" class="thread-body">
+          <div id="scroller" class="scroller wall" data-wp="default" tabindex="-1">
+            <div id="olderLoader" class="older" hidden><span class="spinner" aria-hidden="true"></span>Loading earlier messages…</div>
+            <div id="threadNotice" class="thread-notice" hidden></div>
+            <div id="msgList" class="msg-list" role="log" aria-live="off" aria-label="Messages"></div>
+            <div id="pendingList" class="msg-list pending-list"></div>
+            <div id="typingRow" class="msg in first typing-row" hidden>
+              <div class="bubble typing-bubble" role="img" aria-label="typing">
+                <span class="tdot"></span><span class="tdot"></span><span class="tdot"></span>
+              </div>
+            </div>
+          </div>
+          <button id="jumpBtn" class="jump" type="button" aria-label="Jump to latest messages" hidden>
+            <svg aria-hidden="true"><use href="#i-down"/></svg>
+            <span id="jumpCount" class="jump-count" hidden></span>
+          </button>
+        </div>
+
+        <form id="composer" class="composer" autocomplete="off">
+          <button class="icon-btn" id="attachBtn" type="button" aria-label="Attach file"><svg><use href="#i-clip"/></svg></button>
+          <input type="file" id="fileInput" hidden>
+          <div class="field">
+            <textarea id="text" rows="1" placeholder="Message" aria-label="Message" enterkeyhint="send"></textarea>
+          </div>
+          <button class="send-btn" id="sendBtn" type="submit" aria-label="Send message" disabled><svg><use href="#i-send"/></svg></button>
+        </form>
+
+        <div id="callsOnly" class="calls-only" hidden>
+          <div class="calls-only-card">
+            <span id="callsOnlyAvatar"></span>
+            <h3 id="callsOnlyName"></h3>
+            <p id="callsOnlySub" class="muted"></p>
+            <button id="callsOnlyCall" class="primary-btn" type="button"><svg aria-hidden="true"><use href="#i-phone-fill"/></svg><span>Voice call</span></button>
+            <p class="calls-only-note"><svg aria-hidden="true"><use href="#i-lock"/></svg><span id="callsOnlyText">Calls only. Messaging is turned off on this server.</span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ============================================================ dev drawer (non-modal) -->
+<aside id="devDrawer" class="drawer" aria-label="WebSocket frames" hidden>
+  <header class="bar drawer-bar">
+    <h2>WebSocket frames</h2>
+    <button class="icon-btn" id="clearLog" type="button" aria-label="Clear frames"><svg><use href="#i-trash"/></svg></button>
+    <button class="icon-btn" id="closeDev" type="button" aria-label="Close frames panel"><svg><use href="#i-x"/></svg></button>
+  </header>
+  <pre id="log" class="log"></pre>
+</aside>
+
+<!-- ============================================================ attachment preview sheet -->
+<div id="sheet" class="modal" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+  <div class="modal-panel sheet-panel">
+    <header class="sheet-head">
+      <h2 id="sheetTitle">Send file</h2>
+      <button class="icon-btn" id="sheetClose" type="button" aria-label="Cancel"><svg><use href="#i-x"/></svg></button>
+    </header>
+    <div id="sheetPreview" class="sheet-preview"></div>
+    <div class="sheet-actions">
+      <button id="sheetCancel" class="secondary-btn" type="button">Cancel</button>
+      <button id="sheetSend" class="primary-btn" type="button"><svg aria-hidden="true"><use href="#i-send"/></svg><span>Send</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ chat header overflow menu -->
+<div id="chatMenu" class="menu-layer" hidden>
+  <div id="chatMenuList" class="menu" role="menu" aria-label="Chat options">
+    <button id="menuWallpaper" type="button" role="menuitem" tabindex="-1"><svg aria-hidden="true"><use href="#i-image"/></svg><span>Wallpaper</span></button>
+    <button id="menuAppearance" type="button" role="menuitem" tabindex="-1"><svg aria-hidden="true"><use href="#i-palette"/></svg><span>Appearance</span></button>
+  </div>
+</div>
+
+<!-- ============================================================ appearance sheet: mode, chat theme, wallpaper (local only) -->
+<div id="appearance" class="modal" role="dialog" aria-modal="true" aria-labelledby="apTitle" hidden>
+  <div class="modal-panel sheet-panel ap-panel">
+    <header class="sheet-head">
+      <h2 id="apTitle">Appearance</h2>
+      <button id="apDone" class="text-btn" type="button">Done</button>
+    </header>
+    <div class="ap-body">
+      <div id="apPreview" class="ap-preview wall" data-wp="default" aria-hidden="true">
+        <div class="msg in first"><div class="bubble"><span class="text">Did you see the new colours?</span><span class="meta"><span class="t">10:24</span></span></div></div>
+        <div class="msg out first"><div class="bubble"><span class="text">Yes, looks great!</span><span class="meta" data-tick="read"><span class="t">10:25</span><svg aria-hidden="true"><use href="#i-dcheck"/></svg></span></div></div>
+      </div>
+
+      <section class="ap-sec" aria-labelledby="apModeLabel">
+        <h3 id="apModeLabel">Mode</h3>
+        <div id="apMode" class="seg" role="radiogroup" aria-labelledby="apModeLabel"></div>
+      </section>
+
+      <section class="ap-sec" aria-labelledby="apThemeLabel">
+        <h3 id="apThemeLabel">Theme</h3>
+        <div id="apThemes" class="swatches" role="radiogroup" aria-labelledby="apThemeLabel"></div>
+      </section>
+
+      <section id="apWallSec" class="ap-sec" aria-labelledby="apWallLabel">
+        <h3 id="apWallLabel">Wallpaper</h3>
+        <div class="wp-grid">
+          <div id="apWalls" class="wp-radios" role="radiogroup" aria-labelledby="apWallLabel"></div>
+          <button id="apChoose" class="wp-tile wp-choose" type="button" aria-label="Choose image…"><svg aria-hidden="true"><use href="#i-image-plus"/></svg><span aria-hidden="true">Choose image…</span></button>
+        </div>
+        <input type="file" id="apFile" accept="image/*" hidden>
+        <p class="ap-hint">You can also drop an image here.</p>
+      </section>
+
+      <section id="apDimSec" class="ap-sec" hidden>
+        <label class="ap-label" for="apDim">Dim</label>
+        <div class="ap-dim">
+          <input type="range" id="apDim" min="0" max="0.8" step="0.05" value="0">
+          <output id="apDimOut" for="apDim">0%</output>
+        </div>
+      </section>
+
+      <section id="apScopeSec" class="ap-sec" aria-labelledby="apScopeLabel" hidden>
+        <h3 id="apScopeLabel">Apply wallpaper to</h3>
+        <div class="ap-scope-row">
+          <div id="apScope" class="seg" role="radiogroup" aria-labelledby="apScopeLabel">
+            <button type="button" role="radio" data-scope="chat" aria-checked="true" tabindex="0">This chat</button>
+            <button type="button" role="radio" data-scope="all" aria-checked="false" tabindex="-1">All chats</button>
+          </div>
+          <button id="apReset" class="text-btn" type="button">Reset this chat</button>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ image viewer -->
+<div id="viewer" class="viewer" role="dialog" aria-modal="true" aria-label="Image viewer" hidden>
+  <header class="viewer-bar">
+    <span id="viewerName" class="viewer-name"></span>
+    <a id="viewerDownload" class="icon-btn" href="#" download aria-label="Download image"><svg><use href="#i-download"/></svg></a>
+    <button id="viewerClose" class="icon-btn" type="button" aria-label="Close image"><svg><use href="#i-x"/></svg></button>
+  </header>
+  <div class="viewer-stage"><img id="viewerImg" alt=""></div>
+</div>
+
+<!-- ============================================================ call screen (driven by demo-call.js) -->
+<div id="callScreen" class="call" role="dialog" aria-modal="true" aria-labelledby="callName" aria-describedby="callStatus" hidden>
+  <div class="call-top"><svg aria-hidden="true"><use href="#i-lock"/></svg>Peer-to-peer voice call</div>
+  <div class="call-main">
+    <div id="callAvatarWrap" class="call-avatar">
+      <span class="ring" aria-hidden="true"></span><span class="ring" aria-hidden="true"></span>
+      <span id="callAvatar"></span>
+    </div>
+    <h2 id="callName" class="call-name"></h2>
+    <p id="callStatus" class="call-status"></p>
+    <p id="callDetail" class="call-detail" hidden></p>
+  </div>
+  <div id="callMenu" class="call-menu" role="menu" aria-label="Audio output" hidden></div>
+  <div id="callControls" class="call-controls"></div>
+</div>
+
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+<div id="announcerAlert" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+<audio id="remoteAudio" autoplay></audio>
+
+<script src="demo.js"></script>
+</body>
+</html>

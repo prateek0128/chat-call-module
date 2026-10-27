@@ -1,0 +1,15 @@
+{
+  "call_id": "<uuid>",
+  "call_type": "audio",
+  "caller_id": "A",
+  "caller_name": "A",
+  "chat_id": "<id>",
+  "duration_seconds": "<dur>",
+  "end_reason": "declined",
+  "receiver_id": "B",
+  "rejector_id": "B",
+  "status": "call_rejected",
+  "timestamp": "<ts>",
+  "type": "call_rejected",
+  "webrtc_session_id": "<uuid>"
+}

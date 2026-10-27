@@ -1,0 +1,5 @@
+{
+  "chat_id": "<id>",
+  "read_by": "B",
+  "type": "messages_read"
+}

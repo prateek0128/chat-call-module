@@ -1,0 +1,28 @@
+{
+  "type": "res_users",
+  "users": [
+    {
+      "avatar": "https://img/a.png",
+      "blocked_by_other": false,
+      "chat_id": "<id>",
+      "is_blocked": false,
+      "last_message": {
+        "content": "[IMAGE] photo.png",
+        "file_name": "photo.png",
+        "file_size": 70,
+        "file_type": "image/png",
+        "file_url": "/media/chat/<id>/image/<rand>_photo.png",
+        "is_delivered": true,
+        "is_read": true,
+        "message_type": "image",
+        "sender_id": "A",
+        "timestamp": "<ts>"
+      },
+      "status": "online",
+      "unread_count": 0,
+      "updated_at": "<ts>",
+      "user_id": "A",
+      "username": "Alice"
+    }
+  ]
+}

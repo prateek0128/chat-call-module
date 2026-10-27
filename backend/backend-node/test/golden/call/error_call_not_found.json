@@ -1,0 +1,6 @@
+{
+  "call_id": "nope",
+  "context": "call",
+  "error": "Call not found",
+  "type": "error"
+}

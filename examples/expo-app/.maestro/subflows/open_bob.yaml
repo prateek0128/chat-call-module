@@ -1,0 +1,10 @@
+# From the chat list, open the conversation with Bob (row label starts with his name).
+appId: com.example.commskitdemo
+---
+- extendedWaitUntil:
+    visible: "Bob.*"
+    timeout: 15000
+- tapOn: "Bob.*"
+- extendedWaitUntil:
+    visible: "Message"   # the composer's text field
+    timeout: 10000

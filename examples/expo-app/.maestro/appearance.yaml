@@ -1,0 +1,34 @@
+# Change the colour mode, theme and wallpaper (global), then a per-chat wallpaper.
+appId: com.example.commskitdemo
+name: Appearance
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      USER_ID: U1
+      MODE: both
+# Global: list header "Appearance" -> AppearanceSheet
+- tapOn: "Appearance"
+- tapOn: "Dark"
+- tapOn: "Rose theme"
+- scrollUntilVisible:
+    element: "Gradient 1"
+- tapOn: "Gradient 1"
+- assertVisible:
+    id: "appearance-preview"
+- tapOn: "Done"
+# Per chat: chat header ⋮ -> Wallpaper -> This chat
+- runFlow: subflows/open_bob.yaml
+- tapOn: "More options"
+- tapOn: "Wallpaper"
+- tapOn: "This chat"
+- tapOn: "Colour 2"
+- tapOn: "Reset this chat"
+- tapOn: "Done"
+- tapOn: "Back"
+# Restore the defaults
+- tapOn: "Appearance"
+- tapOn: "Auto"
+- tapOn: "Indigo theme"
+- tapOn: "Default wallpaper"
+- tapOn: "Done"

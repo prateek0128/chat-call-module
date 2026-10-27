@@ -1,0 +1,9 @@
+{
+  "chat_id": "<id>",
+  "message_ids": [
+    "<id>"
+  ],
+  "status": "delivered",
+  "timestamp": "<ts>",
+  "type": "delivery_status"
+}

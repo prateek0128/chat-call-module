@@ -1,0 +1,16 @@
+{
+  "body": "Incoming audio call",
+  "channel": "call_ringtone",
+  "data": {
+    "call_id": "<uuid>",
+    "call_type": "audio",
+    "caller_avatar": "https://img/a.png",
+    "caller_id": "A",
+    "caller_name": "Alice",
+    "chat_id": "<id>",
+    "type": "incoming_call"
+  },
+  "title": "Alice",
+  "ttl": 1,
+  "user_id": "B"
+}

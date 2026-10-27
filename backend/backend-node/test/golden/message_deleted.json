@@ -1,0 +1,6 @@
+{
+  "chat_id": "<id>",
+  "for_everyone": true,
+  "message_id": "<id>",
+  "type": "message_deleted"
+}

@@ -1,0 +1,14 @@
+{
+  "body": "Missed audio call",
+  "channel": "messages",
+  "data": {
+    "call_id": "<uuid>",
+    "call_type": "audio",
+    "caller_id": "A",
+    "chat_id": "<id>",
+    "type": "missed_call"
+  },
+  "title": "Alice",
+  "ttl": null,
+  "user_id": "B"
+}

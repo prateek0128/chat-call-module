@@ -1,0 +1,54 @@
+# Signs in on the demo login screen. Env (with defaults):
+#   SERVER_URL  demo server as the device sees it (Android emulator: http://10.0.2.2:8000)
+#   USER_ID     U1 Alice | U2 Bob | U3 Carol
+#   MODE        chat | calls | both
+appId: com.example.commskitdemo
+env:
+  SERVER_URL: ${SERVER_URL || "http://10.0.2.2:8000"}
+  USER_ID: ${USER_ID || "U1"}
+  MODE: ${MODE || "both"}
+---
+- launchApp
+# Already signed in from an earlier run: log out first.
+- runFlow:
+    when:
+      visible:
+        id: "open-settings"
+    commands:
+      - tapOn:
+          id: "open-settings"
+      - scrollUntilVisible:
+          element:
+            id: "logout"
+      - tapOn:
+          id: "logout"
+      - tapOn: "Log out"
+- extendedWaitUntil:
+    visible:
+      id: "login-server-url"
+    timeout: 20000
+- tapOn:
+    id: "login-server-url"
+- eraseText: 60
+- inputText: ${SERVER_URL}
+- hideKeyboard
+- tapOn:
+    id: "login-connect"
+- extendedWaitUntil:
+    visible:
+      id: "login-user-${USER_ID}"
+    timeout: 15000
+- tapOn:
+    id: "login-mode-${MODE}"
+- tapOn:
+    id: "login-user-${USER_ID}"
+# Android 13+ / iOS ask for notification permission after login (registerDevice).
+- runFlow:
+    when:
+      visible: "Allow"
+    commands:
+      - tapOn: "Allow"
+- extendedWaitUntil:
+    visible:
+      id: "open-settings"
+    timeout: 15000

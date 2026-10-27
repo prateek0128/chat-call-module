@@ -1,0 +1,22 @@
+{
+  "message": {
+    "call_id": null,
+    "chat_id": "<id>",
+    "content": null,
+    "duration": null,
+    "file_name": "photo.png",
+    "file_size": 70,
+    "file_type": "image/png",
+    "file_url": "/media/chat/<id>/image/<rand>_photo.png",
+    "id": "<id>",
+    "is_delivered": true,
+    "is_read": false,
+    "message_type": "image",
+    "reply_to": null,
+    "sender_id": "A",
+    "sender_type": "user",
+    "thumbnail_url": null,
+    "timestamp": "<ts>"
+  },
+  "type": "media_upload_success"
+}

@@ -1,0 +1,9 @@
+{
+  "call_id": "<uuid>",
+  "chat_id": "<id>",
+  "content": "Voice call \u00b7 <clock>",
+  "duration_seconds": "<dur>",
+  "message_id": "<id>",
+  "status": "ended",
+  "type": "call_log"
+}

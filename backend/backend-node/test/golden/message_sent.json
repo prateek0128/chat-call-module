@@ -1,0 +1,22 @@
+{
+  "message": {
+    "call_id": null,
+    "chat_id": "<id>",
+    "content": "hello Bob",
+    "duration": null,
+    "file_name": null,
+    "file_size": null,
+    "file_type": null,
+    "file_url": null,
+    "id": "<id>",
+    "is_delivered": true,
+    "is_read": false,
+    "message_type": "text",
+    "reply_to": null,
+    "sender_id": "A",
+    "sender_type": "user",
+    "thumbnail_url": null,
+    "timestamp": "<ts>"
+  },
+  "type": "message_sent"
+}

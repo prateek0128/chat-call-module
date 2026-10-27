@@ -1,0 +1,9 @@
+{
+  "call_id": "<uuid>",
+  "candidate": {
+    "candidate": "c-b"
+  },
+  "from_user_id": "B",
+  "timestamp": "<ts>",
+  "type": "ice_candidate"
+}

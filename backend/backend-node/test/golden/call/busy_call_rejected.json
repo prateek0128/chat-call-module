@@ -1,0 +1,10 @@
+{
+  "call_id": null,
+  "call_type": "video",
+  "caller_id": "C",
+  "reason": "busy",
+  "receiver_id": "B",
+  "status": "busy",
+  "timestamp": "<ts>",
+  "type": "call_rejected"
+}

@@ -1,0 +1,7 @@
+{
+  "chat_id": "<id>",
+  "created_at": "<ts>",
+  "updated_at": "<ts>",
+  "user1_id": "A",
+  "user2_id": "B"
+}

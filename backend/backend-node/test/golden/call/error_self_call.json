@@ -1,0 +1,5 @@
+{
+  "context": "call",
+  "error": "You cannot call yourself.",
+  "type": "error"
+}

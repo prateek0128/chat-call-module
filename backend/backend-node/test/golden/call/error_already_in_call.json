@@ -1,0 +1,5 @@
+{
+  "context": "call",
+  "error": "You are already in a call.",
+  "type": "error"
+}

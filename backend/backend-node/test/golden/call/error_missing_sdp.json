@@ -1,0 +1,5 @@
+{
+  "context": "call",
+  "error": "Missing required fields: sdp, call_id",
+  "type": "error"
+}
