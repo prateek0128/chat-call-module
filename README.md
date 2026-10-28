@@ -396,3 +396,7 @@ npx expo start --dev-client                           # sign in with http://<you
 
 Its README covers two-phone testing, push, killed-app calls, TURN for mobile data, APNs for iOS VoIP
 and the Maestro E2E flows (`maestro test .maestro`).
+
+## License
+
+[MIT](LICENSE). You may use, modify and redistribute the kit, including in commercial apps, as long as the copyright notice stays.

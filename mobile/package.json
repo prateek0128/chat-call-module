@@ -2,7 +2,7 @@
   "name": "commskit",
   "version": "0.1.0",
   "description": "Generic chat + voice-call kit for React Native / Expo (mobile half of commskit).",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "private": true,
   "main": "src/index.ts",
   "react-native": "src/index.ts",
@@ -70,6 +70,7 @@
     "!src/types",
     "plugin",
     "app.plugin.js",
+    "LICENSE",
     "README.md"
   ],
   "scripts": {
