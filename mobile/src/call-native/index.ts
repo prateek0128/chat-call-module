@@ -3,7 +3,7 @@
  * never chat). iOS: CallKit (react-native-callkeep) + PushKit VoIP pushes
  * (react-native-voip-push-notification). Android: notifee full-screen notifications + an
  * expo-notifications background task. All native libs are optional peers, lazily required.
- * Native setup: the Expo config plugin (`"plugins": ["commskit"]`, app.plugin.js).
+ * Native setup: the Expo config plugin (`"plugins": ["@snakechat/commskit-mobile"]`, app.plugin.js).
  */
 export { createCallKitNotifier, CALLKEEP_END_REASON, type CallKitNotifier, type CallKitNotifierOptions } from "./callkit";
 export { registerVoipPush, type VoipPushOptions } from "./voip";

@@ -25,6 +25,7 @@ examples/backend/demo-server-python/ui_tests/screenshots/
 
 # Web build output and e2e screenshots
 dist/
+build/
 dist-check/
 examples/web-app/e2e/screenshots/
 

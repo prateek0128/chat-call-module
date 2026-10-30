@@ -1,15 +1,15 @@
-# commskit-node
+# @snakechat/commskit-node
 
 Node.js / TypeScript server for the commskit wire protocol. It is a sibling of the Python backend
 (`../backend-python`, package `commskit`) and speaks exactly the same protocol
-([`../../docs/archive/PROTOCOL.md`](../../docs/archive/PROTOCOL.md)), so the existing clients (`mobile/`, `web/`,
+([`../../docs/archive/PROTOCOL.md`](https://github.com/prateek0128/chat-call-module/blob/main/docs/archive/PROTOCOL.md)), so the existing clients (`mobile/`, `web/`,
 `examples/backend/demo-server-python` page) work against it unchanged. A database created by either backend works with the other
 (same table and column names).
 
 **Status: feature-complete.** Core, chat, call signalling, moderation (block / report / admin review),
 devices + push (Expo, Apple VoIP), the Redis bridge and S3 storage are implemented. 172 tests pass (1 more is
 skipped: it needs a real `redis-server`). Redis, S3, Expo and APNs are tested with fakes, not real services.
-Guides: [`../../docs/backend/backend-node/`](../../docs/backend/backend-node/).
+Guides: [`../../docs/backend/backend-node/`](https://github.com/prateek0128/chat-call-module/tree/main/docs/backend/backend-node).
 
 Stack: TypeScript (strict), Node >= 20, ESM, `ws`, `kysely` (better-sqlite3 for tests/demo, `pg` for production),
 `jose` (HS256 JWT, claim `uid`), tsup, vitest.
@@ -17,7 +17,7 @@ Stack: TypeScript (strict), Node >= 20, ESM, `ws`, `kysely` (better-sqlite3 for 
 ## Install
 
 ```bash
-npm install commskit-node kysely ws jose
+npm install @snakechat/commskit-node kysely ws jose
 npm install better-sqlite3      # or: pg
 npm install fastify             # or: express   (optional peer dependencies)
 ```
@@ -28,8 +28,8 @@ npm install fastify             # or: express   (optional peer dependencies)
 import Fastify from "fastify";
 import Database from "better-sqlite3";
 import { Kysely, SqliteDialect } from "kysely";
-import { ChatFeature, CommsHub, JwtAuth, ensureSchema } from "commskit-node";
-import { commskitPlugin } from "commskit-node/fastify";
+import { ChatFeature, CommsHub, JwtAuth, ensureSchema } from "@snakechat/commskit-node";
+import { commskitPlugin } from "@snakechat/commskit-node/fastify";
 
 const db = new Kysely<any>({ dialect: new SqliteDialect({ database: new Database("comms.db") }) });
 await ensureSchema(db); // creates chats, messages, calls, comms_* tables (idempotent)
@@ -47,7 +47,7 @@ await app.listen({ port: 8080 });
 ```ts
 import { createServer } from "node:http";
 import express from "express";
-import { commskitRouter, attach } from "commskit-node/express";
+import { commskitRouter, attach } from "@snakechat/commskit-node/express";
 
 const app = express();
 app.use(commskitRouter(hub));                 // /chats/...
@@ -60,7 +60,7 @@ No framework: `createServer((req, res) => restListener(hub)(req, res))` plus `hu
 
 ## Python name mapping
 
-| Python (`commskit`) | Node (`commskit-node`) |
+| Python (`commskit`) | Node (`@snakechat/commskit-node`) |
 |---|---|
 | `CommsHub(auth=, session_factory=, users=, push=, ...)` | `new CommsHub({ auth, db, users, push, connections, rateLimiter, roleResolver, onHandlerError, cameOnlineCooldown })` |
 | `ChatFeature(...).install(hub)` | `hub.install(new ChatFeature({ policy, storage, devices, config }))` |

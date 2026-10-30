@@ -1,6 +1,6 @@
 {
   "name": "@snakechat/commskit-node",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Node.js/TypeScript server for the commskit wire protocol: chat, calls, moderation, push. Sibling of the Python `commskit` backend.",
   "keywords": [
     "chat",

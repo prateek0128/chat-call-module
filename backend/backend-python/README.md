@@ -1,7 +1,7 @@
 # commskit (backend)
 
 Generic 1:1 **chat** and **P2P voice/video call signalling** for FastAPI + SQLAlchemy 2 (async).
-It speaks the wire protocol in [`../../docs/archive/PROTOCOL.md`](../../docs/archive/PROTOCOL.md), so existing clients of
+It speaks the wire protocol in [`../../docs/archive/PROTOCOL.md`](https://github.com/prateek0128/chat-call-module/blob/main/docs/archive/PROTOCOL.md), so existing clients of
 the first host app (Smart Matrimony) keep working.
 
 ```
@@ -22,6 +22,17 @@ Dependency rule (enforced by `tests/test_imports.py`): `chat`, `call` and `moder
 sender is used.
 
 ## Install
+
+```bash
+pip install commskit                                    # core + chat + call
+pip install "commskit[redis]"                           # + multi-worker presence/fan-out
+pip install "commskit[s3]"                              # boto3 + Pillow: S3Storage
+pip install "commskit[media]"                           # Pillow: image thumbnails (ffmpeg / ffprobe optional)
+pip install "commskit[push]"                            # httpx, for ExpoPushSender / DevicePushRouter
+pip install "commskit[apns]"                            # httpx[http2] + cryptography, for ApnsVoipSender (iOS VoIP)
+```
+
+From a clone of the repository (development):
 
 ```bash
 pip install -e ./backend/backend-python                 # core + chat + call

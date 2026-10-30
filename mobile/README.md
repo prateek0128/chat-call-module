@@ -1,21 +1,29 @@
-# commskit (mobile)
+# @snakechat/commskit-mobile
 
 Headless 1:1 **chat** and **voice calls** for React Native / Expo, speaking the wire protocol in
-[`../docs/archive/PROTOCOL.md`](../docs/archive/PROTOCOL.md). It is the mobile half of `commskit`
-(plan: [`../docs/archive/IMPLEMENTATION_PLAN.md`](../docs/archive/IMPLEMENTATION_PLAN.md), phases 6–8).
+[`../docs/archive/PROTOCOL.md`](https://github.com/prateek0128/chat-call-module/blob/main/docs/archive/PROTOCOL.md). It is the mobile half of `commskit`
+(plan: [`../docs/archive/IMPLEMENTATION_PLAN.md`](https://github.com/prateek0128/chat-call-module/blob/main/docs/archive/IMPLEMENTATION_PLAN.md), phases 6–8).
+
+## Install
+
+```bash
+npm install @snakechat/commskit-mobile
+```
+
+The optional peer dependencies for the features you use are listed below. Calls need an Expo development build, not Expo Go.
 
 | Entry | What | Needs |
 |---|---|---|
-| `commskit/core` (also `commskit`) | one WebSocket (`CommsClient`), `CommsProvider`, config, shared user directory, wire types | `react`, `react-native` |
-| `commskit/chat` | `ChatStore`, `ChatProvider`, chat hooks, REST helpers | + `expo-file-system` (optional, for the default media reader) |
-| `commskit/call` | `VoiceCallEngine`, `CallProvider`, `useCall`, audio / notification adapters, ICE servers | + `@stream-io/react-native-webrtc`, `react-native-incall-manager` (optional peers) |
-| `commskit/theme` | design tokens, `createTheme`, `ThemeProvider`, `useTheme`, `useReducedMotion`, shared primitives (`Avatar`, `Icon`, `ScalePressable`, `useSafeInsets`) | `react`, `react-native` (+ `react-native-safe-area-context`, optional) |
-| `commskit/chat-ui` | chat screens and components (see [UI kit](#ui-kit)) | `theme` + `chat` |
-| `commskit/call-ui` | call screens, `CallOverlay` | `theme` + `call` |
-| `commskit/notifications` | `registerDevice` / `unregisterDevice` (`POST`/`DELETE /devices`), Android channels, `useNotificationRouting`, `parseNotificationData` (see [Push notifications](#push-notifications)) | `core` + `expo-notifications`, `expo-device` (optional peers) |
-| `commskit/call-native` | CallKit + PushKit (iOS), notifee full-screen calls + background task (Android), `createPlatformCallNotifier` (see [Incoming calls when the app is closed](#incoming-calls-when-the-app-is-closed-ios-callkit--voip-android-full-screen)) | `core` + `call` (never `chat`) + `react-native-callkeep`, `react-native-voip-push-notification`, `@notifee/react-native`, `expo-task-manager` (optional peers) |
-| `commskit/moderation` | `ModerationStore`, `ModerationProvider`, `useBlocking` (see [Report & block](#report--block)) | `core` |
-| `commskit/app.plugin.js` | Expo config plugin: `"plugins": ["commskit"]` | `@expo/config-plugins` (present in every Expo app) |
+| `@snakechat/commskit-mobile/core` (also `@snakechat/commskit-mobile`) | one WebSocket (`CommsClient`), `CommsProvider`, config, shared user directory, wire types | `react`, `react-native` |
+| `@snakechat/commskit-mobile/chat` | `ChatStore`, `ChatProvider`, chat hooks, REST helpers | + `expo-file-system` (optional, for the default media reader) |
+| `@snakechat/commskit-mobile/call` | `VoiceCallEngine`, `CallProvider`, `useCall`, audio / notification adapters, ICE servers | + `@stream-io/react-native-webrtc`, `react-native-incall-manager` (optional peers) |
+| `@snakechat/commskit-mobile/theme` | design tokens, `createTheme`, `ThemeProvider`, `useTheme`, `useReducedMotion`, shared primitives (`Avatar`, `Icon`, `ScalePressable`, `useSafeInsets`) | `react`, `react-native` (+ `react-native-safe-area-context`, optional) |
+| `@snakechat/commskit-mobile/chat-ui` | chat screens and components (see [UI kit](#ui-kit)) | `theme` + `chat` |
+| `@snakechat/commskit-mobile/call-ui` | call screens, `CallOverlay` | `theme` + `call` |
+| `@snakechat/commskit-mobile/notifications` | `registerDevice` / `unregisterDevice` (`POST`/`DELETE /devices`), Android channels, `useNotificationRouting`, `parseNotificationData` (see [Push notifications](#push-notifications)) | `core` + `expo-notifications`, `expo-device` (optional peers) |
+| `@snakechat/commskit-mobile/call-native` | CallKit + PushKit (iOS), notifee full-screen calls + background task (Android), `createPlatformCallNotifier` (see [Incoming calls when the app is closed](#incoming-calls-when-the-app-is-closed-ios-callkit--voip-android-full-screen)) | `core` + `call` (never `chat`) + `react-native-callkeep`, `react-native-voip-push-notification`, `@notifee/react-native`, `expo-task-manager` (optional peers) |
+| `@snakechat/commskit-mobile/moderation` | `ModerationStore`, `ModerationProvider`, `useBlocking` (see [Report & block](#report--block)) | `core` |
+| `@snakechat/commskit-mobile/app.plugin.js` | Expo config plugin: `"plugins": ["@snakechat/commskit-mobile"]` | `@expo/config-plugins` (present in every Expo app) |
 
 Rules (enforced by `__tests__/boundaries.test.ts`): `chat` and `call` import only `core`, never each
 other. Only `src/call` touches WebRTC / InCallManager, and only `src/chat/media.ts` touches
@@ -39,7 +47,7 @@ The package ships TypeScript source. Metro and Babel compile it like your own co
 ```jsonc
 // app package.json
 "dependencies": {
-  "commskit": "file:../commskit/mobile",
+  "@snakechat/commskit-mobile": "^0.1.0",
   // call only:
   "@stream-io/react-native-webrtc": "^137.0.0",
   "react-native-incall-manager": "^4.2.0",
@@ -58,7 +66,7 @@ try/catch is allowed to fail at runtime. For chat without Expo, you can instead 
 ## Configuration
 
 ```ts
-import type { CommsConfig } from "commskit/core";
+import type { CommsConfig } from "@snakechat/commskit-mobile/core";
 
 const config: CommsConfig = {
   baseUrl: "https://api.example.com",          // REST; wsUrl derived as wss://api.example.com
@@ -82,8 +90,8 @@ app is in the foreground. It reconnects at once when the app becomes active, and
 ### 1. Chat only
 
 ```tsx
-import { CommsProvider } from "commskit/core";
-import { ChatProvider, useConversations, useConversation, useUnreadCount, useChatApi } from "commskit/chat";
+import { CommsProvider } from "@snakechat/commskit-mobile/core";
+import { ChatProvider, useConversations, useConversation, useUnreadCount, useChatApi } from "@snakechat/commskit-mobile/chat";
 
 export default function App() {
   return (
@@ -125,8 +133,8 @@ don't increment unread. If your screen stays mounted while hidden, pass `{active
 ### 2. Call only
 
 ```tsx
-import { CommsProvider } from "commskit/core";
-import { CallProvider, useCall, turnCredentialsIceServers } from "commskit/call";
+import { CommsProvider } from "@snakechat/commskit-mobile/core";
+import { CallProvider, useCall, turnCredentialsIceServers } from "@snakechat/commskit-mobile/call";
 
 const iceServers = turnCredentialsIceServers(config);   // POST /call/turn-credentials, cached until ttl
 
@@ -202,12 +210,12 @@ Optional, themeable React Native screens on top of the hooks above. There are th
 
 | Entry | Imports | Main exports |
 |---|---|---|
-| `commskit/theme` | react, react-native | `tokens`, `createTheme`, `ThemeProvider`, `useTheme`, `AppearanceProvider`, `useAppearance`, `resolveWallpaper`, `useReducedMotion`, `useResponsiveLayout`, `decideLayout`, `Avatar`, `Icon`, `ScalePressable`, `useSafeInsets`, `announce` |
-| `commskit/chat-ui` | theme, core, chat | `ConversationListScreen`, `ChatScreen`, `ConversationList`, `ConversationRow`, `ChatHeader`, `MessageList`, `MessageBubble`, `CallEntry`, `TypingIndicator`, `Composer`, `AttachmentPreviewSheet`, `ConnectionBanner`, `ImageViewer`, `ChatWallpaper`, `AppearanceSheet`, `MessageActionsSheet`, `ReplyBar`, `InAppMessageBanner`, `useInAppBanner`, `VideoPlayerModal`, `createDefaultFileActions`, plus pure helpers (`buildMessageRows`, `conversationPreview`, `parseTimestamp`, ...) |
-| `commskit/call-ui` | theme, core, call | `CallOverlay`, `CallScreen`, `CallControls`, `CallButton`, `PulseAvatar`, `ReturnToCallPill`, `CallBackground`, `mapLiveCall` / `mapEndedCall` |
+| `@snakechat/commskit-mobile/theme` | react, react-native | `tokens`, `createTheme`, `ThemeProvider`, `useTheme`, `AppearanceProvider`, `useAppearance`, `resolveWallpaper`, `useReducedMotion`, `useResponsiveLayout`, `decideLayout`, `Avatar`, `Icon`, `ScalePressable`, `useSafeInsets`, `announce` |
+| `@snakechat/commskit-mobile/chat-ui` | theme, core, chat | `ConversationListScreen`, `ChatScreen`, `ConversationList`, `ConversationRow`, `ChatHeader`, `MessageList`, `MessageBubble`, `CallEntry`, `TypingIndicator`, `Composer`, `AttachmentPreviewSheet`, `ConnectionBanner`, `ImageViewer`, `ChatWallpaper`, `AppearanceSheet`, `MessageActionsSheet`, `ReplyBar`, `InAppMessageBanner`, `useInAppBanner`, `VideoPlayerModal`, `createDefaultFileActions`, plus pure helpers (`buildMessageRows`, `conversationPreview`, `parseTimestamp`, ...) |
+| `@snakechat/commskit-mobile/call-ui` | theme, core, call | `CallOverlay`, `CallScreen`, `CallControls`, `CallButton`, `PulseAvatar`, `ReturnToCallPill`, `CallBackground`, `mapLiveCall` / `mapEndedCall` |
 
-The look follows [`../design/DESIGN_SYSTEM.md`](../design/DESIGN_SYSTEM.md). Every colour, size,
-radius, spacing and duration comes from [`../design/tokens.json`](../design/tokens.json) through the
+The look follows [`../design/DESIGN_SYSTEM.md`](https://github.com/prateek0128/chat-call-module/blob/main/design/DESIGN_SYSTEM.md). Every colour, size,
+radius, spacing and duration comes from [`../design/tokens.json`](https://github.com/prateek0128/chat-call-module/blob/main/design/tokens.json) through the
 theme. `src/theme/tokens.ts` mirrors that file, and a test keeps them equal.
 
 ### Install
@@ -231,7 +239,7 @@ As with the other optional peers, enable `transformer.allowOptionalDependencies`
 ### ThemeProvider
 
 ```tsx
-import { ThemeProvider } from "commskit/theme";
+import { ThemeProvider } from "@snakechat/commskit-mobile/theme";
 
 <ThemeProvider colorScheme="system" /* "light" | "dark" | "system" (default, uses useColorScheme) */>
   <App />
@@ -246,10 +254,10 @@ import { ThemeProvider } from "commskit/theme";
 ### Chat only
 
 ```tsx
-import { CommsProvider } from "commskit/core";
-import { ChatProvider } from "commskit/chat";
-import { ThemeProvider } from "commskit/theme";
-import { ChatScreen, ConversationListScreen } from "commskit/chat-ui";
+import { CommsProvider } from "@snakechat/commskit-mobile/core";
+import { ChatProvider } from "@snakechat/commskit-mobile/chat";
+import { ThemeProvider } from "@snakechat/commskit-mobile/theme";
+import { ChatScreen, ConversationListScreen } from "@snakechat/commskit-mobile/chat-ui";
 import * as ImagePicker from "expo-image-picker";
 
 const pickAttachment = async () => {
@@ -411,8 +419,8 @@ For a custom UI, use `useInAppBanner({ activePeerId?, enabled?, autoHideMs? })`.
 ### Call only
 
 ```tsx
-import { CallProvider } from "commskit/call";
-import { CallOverlay } from "commskit/call-ui";
+import { CallProvider } from "@snakechat/commskit-mobile/call";
+import { CallOverlay } from "@snakechat/commskit-mobile/call-ui";
 
 <CommsProvider config={config}>
   <ThemeProvider>
@@ -466,9 +474,9 @@ The UI entries never import each other. Three seams connect them:
 ```tsx
 import { NavigationContainer, createNavigationContainerRef } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { CallProvider, useCall } from "commskit/call";
-import { CallOverlay } from "commskit/call-ui";
-import { ChatScreen, ConversationListScreen } from "commskit/chat-ui";
+import { CallProvider, useCall } from "@snakechat/commskit-mobile/call";
+import { CallOverlay } from "@snakechat/commskit-mobile/call-ui";
+import { ChatScreen, ConversationListScreen } from "@snakechat/commskit-mobile/chat-ui";
 
 const nav = createNavigationContainerRef();
 const Stack = createNativeStackNavigator();
@@ -515,7 +523,7 @@ chat shows the live call entry, then the logged outcome (local and server `call_
 ### Theming and overrides
 
 ```tsx
-import { createTheme, ThemeProvider } from "commskit/theme";
+import { createTheme, ThemeProvider } from "@snakechat/commskit-mobile/theme";
 
 <ThemeProvider
   theme={{
@@ -543,13 +551,13 @@ Return `undefined` from `renderIcon` to keep the built-in glyph.
 
 ### Replacing components
 
-Full guide: [Customizing the UI](../docs/mobile/04-customizing-the-ui.md).
+Full guide: [Customizing the UI](https://github.com/prateek0128/chat-call-module/blob/main/docs/mobile/04-customizing-the-ui.md).
 
 Pass `components` to `ThemeProvider` (or `AppearanceProvider`). A replacement receives the same props as the built-in, so it keeps the full chat behaviour, and may render the built-in itself.
 
 ```tsx
-import { DefaultAvatar, ThemeProvider } from "commskit/theme";
-import type { ChatUiSlots } from "commskit/chat-ui";
+import { DefaultAvatar, ThemeProvider } from "@snakechat/commskit-mobile/theme";
+import type { ChatUiSlots } from "@snakechat/commskit-mobile/chat-ui";
 
 const components = {
   MessageBubble: MyBubble,
@@ -561,21 +569,21 @@ const components = {
 
 Every UI component is a slot: `Avatar`, `Icon`, `ScalePressable` (theme); the chat-ui components in `ChatUiSlots` (`ChatScreen`, `ChatHeader`, `MessageList`, `MessageBubble`, `Composer`, `ConversationList`, `ConversationRow`, sheets, viewers, banners and more); and the call-ui components in `CallUiSlots` (`CallScreen`, `CallOverlay`, `CallControls`, `CallButton`, `CallBackground`, `PulseAvatar`, `ReturnToCallPill`). The built-ins are exported as `Default<Name>`.
 
-**Fully custom UI:** skip the components and build your own on the headless hooks and providers (`commskit/chat`, `commskit/call`, `commskit/core`); they hold all the chat and call logic and no markup.
+**Fully custom UI:** skip the components and build your own on the headless hooks and providers (`@snakechat/commskit-mobile/chat`, `@snakechat/commskit-mobile/call`, `@snakechat/commskit-mobile/core`); they hold all the chat and call logic and no markup.
 
 ### Appearance (themes & wallpapers)
 
 Users pick a colour mode (Auto / Light / Dark), a **text size** (small / medium / large), a **density** (comfortable / compact), a chat theme (7 presets from
 `tokens.json → themePresets`) and a chat wallpaper (default, solid, gradient or their own photo),
 globally or per chat. These are local device preferences; nothing is sent to the other person.
-See "Appearance: chat themes and wallpapers" in [`../design/DESIGN_SYSTEM.md`](../design/DESIGN_SYSTEM.md).
+See "Appearance: chat themes and wallpapers" in [`../design/DESIGN_SYSTEM.md`](https://github.com/prateek0128/chat-call-module/blob/main/design/DESIGN_SYSTEM.md).
 
 `AppearanceProvider` replaces your `ThemeProvider` (it renders one with the user's mode and preset,
 forwarding `theme` and `renderIcon`), so the whole kit re-themes live:
 
 ```tsx
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AppearanceProvider } from "commskit/theme";
+import { AppearanceProvider } from "@snakechat/commskit-mobile/theme";
 
 <AppearanceProvider
   storage={AsyncStorage}            // default: async-storage if installed, else memory; null = don't persist
@@ -743,7 +751,7 @@ in the background. Pass the notifier as a stable object (module-level or `useMem
 
 ## Push notifications
 
-`commskit/notifications` (imports `core` only) registers the device with the backend's
+`@snakechat/commskit-mobile/notifications` (imports `core` only) registers the device with the backend's
 `DeviceRegistry` (PROTOCOL §8) and routes taps. Install the optional peers:
 
 ```bash
@@ -751,7 +759,7 @@ npx expo install expo-notifications expo-device
 ```
 
 ```tsx
-import { registerDevice, unregisterDevice, useNotificationRouting } from "commskit/notifications";
+import { registerDevice, unregisterDevice, useNotificationRouting } from "@snakechat/commskit-mobile/notifications";
 
 // After login and on every app start (tokens rotate; the backend upserts by device_id).
 // Asks permission, creates the Android channels `messages` (default importance) and
@@ -789,11 +797,11 @@ function NotificationRouter() {
 - `notificationTapTarget` and `notificationPresentation` are the pure routing decisions that the
   hook uses, exported so you can call them from your own handlers.
 - The legacy `registerPushToken` / `removePushToken` (`/chats/expo/push/token`) in
-  `commskit/chat` still work for installed apps. New apps use `registerDevice`.
+  `@snakechat/commskit-mobile/chat` still work for installed apps. New apps use `registerDevice`.
 
 ## Incoming calls when the app is closed (iOS CallKit + VoIP, Android full-screen)
 
-`commskit/call-native` is a call add-on (imports `core` + `call`, never `chat`). It gives
+`@snakechat/commskit-mobile/call-native` is a call add-on (imports `core` + `call`, never `chat`). It gives
 `<CallProvider>` a `CallNotifier` backed by the OS call UI, plus the native plumbing to ring while the
 app is killed.
 
@@ -808,7 +816,7 @@ npx expo install react-native-callkeep react-native-voip-push-notification @noti
 {
   "expo": {
     "plugins": [
-      ["commskit", { "microphonePermission": "Allow $(PRODUCT_NAME) to use the microphone for calls." }]
+      ["@snakechat/commskit-mobile", { "microphonePermission": "Allow $(PRODUCT_NAME) to use the microphone for calls." }]
       // options: voip (default true), callKeepService (default true), notifeeForegroundService (default true),
       //          androidPermissions: [...extra]
     ],
@@ -836,11 +844,11 @@ The plugin (`app.plugin.js`, plain CommonJS, idempotent marker-guarded edits) ad
 
 ```tsx
 // index.js — module scope, BEFORE registerRootComponent (background tasks must exist at launch)
-import { registerBackgroundCallHandler } from "commskit/call-native";
+import { registerBackgroundCallHandler } from "@snakechat/commskit-mobile/call-native";
 if (Platform.OS === "android") registerBackgroundCallHandler(); // data-only incoming_call -> full-screen notification
 
 // calls.ts — create once
-import { createPlatformCallNotifier, registerVoipPush, saveCallSession, clearCallSession, useNativeCallNotifier } from "commskit/call-native";
+import { createPlatformCallNotifier, registerVoipPush, saveCallSession, clearCallSession, useNativeCallNotifier } from "@snakechat/commskit-mobile/call-native";
 export const callNotifier = createPlatformCallNotifier({ ios: { appName: "My App" }, android: { texts: { answer: "Answer" } } });
 
 // App
@@ -885,12 +893,12 @@ How it behaves:
 - Elsewhere `createPlatformCallNotifier` returns a no-op notifier.
 
 Backend config: device registry + `DevicePushRouter`, APNs VoIP credentials (`APNS_*`, `pip install -e "./backend/backend-python[apns]"`)
-and `android_call_style="data"`. See [backend README: Devices and push notifications](../backend/backend-python/README.md#devices-and-push-notifications-protocolmd-section-8)
-and [APNs VoIP (iOS CallKit)](../backend/backend-python/README.md#apns-voip-ios-callkit).
+and `android_call_style="data"`. See [backend README: Devices and push notifications](https://github.com/prateek0128/chat-call-module/blob/main/backend/backend-python/README.md#devices-and-push-notifications-protocolmd-section-8)
+and [APNs VoIP (iOS CallKit)](https://github.com/prateek0128/chat-call-module/blob/main/backend/backend-python/README.md#apns-voip-ios-callkit).
 
 ## Report & block
 
-`commskit/moderation` (imports `core` only) implements PROTOCOL §7. `ModerationStore` is
+`@snakechat/commskit-mobile/moderation` (imports `core` only) implements PROTOCOL §7. `ModerationStore` is
 framework-free. Its block list follows the WS events `user_blocked`, `blocked_by_user`,
 `user_unblocked` and `unblocked_by_user`, plus the `is_blocked` / `blocked_by_other` flags in
 `res_users` and `res_messages.info`. Writes go over REST (`POST`/`DELETE /moderation/blocks`,
@@ -899,8 +907,8 @@ optimistic and roll back on failure. A local `user_blocked` / `user_unblocked` f
 `ChatStore` (which now also tracks these events) in sync immediately.
 
 ```tsx
-import { ModerationProvider, useBlocking } from "commskit/moderation";
-import { BlockedUsersScreen, ChatScreen, ReportSheet } from "commskit/chat-ui";
+import { ModerationProvider, useBlocking } from "@snakechat/commskit-mobile/moderation";
+import { BlockedUsersScreen, ChatScreen, ReportSheet } from "@snakechat/commskit-mobile/chat-ui";
 
 <CommsProvider config={config}>
   <ModerationProvider>
@@ -986,7 +994,7 @@ hand-written react-native stand-in (`__tests__/rn-mock/react-native.js`). See
 | `chatConsent`, `isBlocked`, `blockedByOther` | `useConversation(peerId).thread.info` (`chat_consent_given`, `is_blocked`, `blocked_by_other`) |
 | `sendChatConsent`, `reportAndBlockUser`, `unblockUser` (host extensions) | app code: `useComms().client.send("chat_consent", {...})`, and listen with `client.on("user_blocked", ...)`. Apply results with `useChat().store.updateInfo(peerId, {is_blocked: true})` / `store.removeConversation(peerId)` |
 | community events (`new_post`, …) re-emitted via DeviceEventEmitter | app code: `useComms().client.on("new_post", handler)` (same socket) |
-| `CallProvider` + `useCall()` (`src/contexts/callContext.tsx`), own socket | `<CallProvider>` from `commskit/call` (no own socket) |
+| `CallProvider` + `useCall()` (`src/contexts/callContext.tsx`), own socket | `<CallProvider>` from `@snakechat/commskit-mobile/call` (no own socket) |
 | `useVoiceCall(socket)` (`src/hooks/useVoiceCall.ts`) | `VoiceCallEngine` inside `CallProvider`; use `useCall()` |
 | `startCall(receiverId, chatId, receiverName, creditAcknowledged)` | `startCall(receiverId, {chatId, peerName, extra: {credit_acknowledged}})` |
 | `callState.callerId / callerName` (peer, with the caller-view quirk) | `state.peerId / peerName` (normalised by `call/compat.ts`) |
@@ -997,7 +1005,7 @@ hand-written react-native stand-in (`__tests__/rn-mock/react-native.js`). See
 | ended screen state (`endedCall`, Call again) | `useCall().lastEnded`, `callAgain()`, `clearLastEnded()` |
 | `CALL_LOG_EVENT` DeviceEventEmitter fallback | automatic local `call_log` (`emitLocalCallLog`) |
 | `rememberUserNames` / `getUserName` (`src/utils/userNames.ts`) | `useComms().users` (`UserDirectory`): `remember`, `getName`, `getAvatar`; hook `useUserProfile(id)` |
-| `formatCallDuration` / `callLogText` (`src/utils/callDuration.ts`), `parseCallEntry` / `friendlyDuration` (CustomMessageBubble) | same names in `commskit/core` (re-exported by chat/call) |
+| `formatCallDuration` / `callLogText` (`src/utils/callDuration.ts`), `parseCallEntry` / `friendlyDuration` (CustomMessageBubble) | same names in `@snakechat/commskit-mobile/core` (re-exported by chat/call) |
 | `startChat`, `sendExpoPushToken`, `removeExpoPushToken` (`src/apiServices/chat.ts`, axios) | `useChatApi().startChat / registerPushToken / removePushToken` (fetch + `getToken`) |
 | InCallManager in `CallScreenUI` (start on connect, speaker) + `startCallRingtone` | `CallAudio` adapter (default `createInCallManagerAudio()`); `useCall().toggleSpeaker()` |
 | hard-coded TURN (`webrtcuser` / `webrtcpass`) | `iceServers={turnCredentialsIceServers(config)}` (backend `/call/turn-credentials`) |
@@ -1029,9 +1037,9 @@ These are client-side choices. The wire protocol is unchanged.
 
 ## Chat extras (PROTOCOL section 9)
 
-Engine (`commskit/chat`): `ChatStore` handles `message_deleted` (for everyone: "This message was deleted" placeholder; for me: removed), `chat_cleared` (drops messages up to `cleared_at`, resets preview and unread), system messages (`message_type`/`sender_type` "system", never "mine"), and `rate_limited` / `too_long` errors (the optimistic message stays as `failed` with a retry; `onError` gets `retryAfter` / `max`; `state.rateLimitedUntil` is set). `mark_read` also sends `candidate_user_id`. `useConversation()` adds `deleteMessage(id, { forEveryone })`, `clearChat()`, `retryMessage(id)` and `rateLimitedUntil`.
+Engine (`@snakechat/commskit-mobile/chat`): `ChatStore` handles `message_deleted` (for everyone: "This message was deleted" placeholder; for me: removed), `chat_cleared` (drops messages up to `cleared_at`, resets preview and unread), system messages (`message_type`/`sender_type` "system", never "mine"), and `rate_limited` / `too_long` errors (the optimistic message stays as `failed` with a retry; `onError` gets `retryAfter` / `max`; `state.rateLimitedUntil` is set). `mark_read` also sends `candidate_user_id`. `useConversation()` adds `deleteMessage(id, { forEveryone })`, `clearChat()`, `retryMessage(id)` and `rateLimitedUntil`.
 
-UI (`commskit/chat-ui`), all opt-out props on `ChatScreen` / `ConversationList`:
+UI (`@snakechat/commskit-mobile/chat-ui`), all opt-out props on `ChatScreen` / `ConversationList`:
 - Header subtitle: `last seen just now / N min ago / today at 6:02 PM / yesterday at ... / 13 Sep at ...` (naive UTC timestamps are handled). Priority: You are blocked > Blocked > typing... > online > last seen > offline. One shared 60 s ticker (`useSharedTicker`). `clock="24h"` switches the format. Blocked either way hides the online dot and the call action.
 - `ConversationList` / `ConversationListScreen`: filter chips All / Unread N plus host filters (`filters`, `filter`, `onFilterChange`, `showFilters`) with filter-aware empty states. Blocked rows show "You blocked this contact" / "Blocked by {name}" and no online dot. Search also matches the last message text (accent-insensitive).
 - Bubbles: sending overlay (spinner and "Sending...") on image/video/file while pending, image load spinner, failed state with "Not sent. Tap to retry", deleted bubble (italic), centred system chip, document badges (`documentBadge(name, mime)`; "PDF . 1.2 MB").

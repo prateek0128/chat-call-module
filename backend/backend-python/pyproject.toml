@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,7 +7,21 @@ name = "commskit"
 version = "0.1.0"
 description = "Generic 1:1 chat + WebRTC voice-call signalling kit for FastAPI (with moderation, devices and push)."
 readme = "README.md"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "snakechat" }]
+keywords = ["chat", "voice-call", "webrtc", "websocket", "fastapi", "realtime", "signaling", "commskit"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: AsyncIO",
+    "Framework :: FastAPI",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Communications :: Chat",
+    "Topic :: Internet :: WWW/HTTP",
+]
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.110",
@@ -29,6 +43,11 @@ dev = [
     "cryptography>=42",                                  # APNs JWT tests
     "pillow>=10",                                        # media_tools tests
 ]
+
+[project.urls]
+Homepage = "https://github.com/prateek0128/chat-call-module/tree/main/backend/backend-python#readme"
+Repository = "https://github.com/prateek0128/chat-call-module"
+Issues = "https://github.com/prateek0128/chat-call-module/issues"
 
 [tool.setuptools.packages.find]
 include = ["commskit*"]

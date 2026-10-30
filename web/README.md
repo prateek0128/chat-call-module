@@ -1,9 +1,9 @@
-# commskit-web
+# @snakechat/commskit-web
 
 React (react-dom) chat UI for the browser: the web twin of the React Native chat UI (`commskit/chat-ui`).
-It speaks the same wire protocol ([`../docs/archive/PROTOCOL.md`](../docs/archive/PROTOCOL.md)) and shares the same
+It speaks the same wire protocol ([`../docs/archive/PROTOCOL.md`](https://github.com/prateek0128/chat-call-module/blob/main/docs/archive/PROTOCOL.md)) and shares the same
 framework-free engine, so a message sent from the web shows up in the phone app and the other way round.
-Plain CSS (variables from [`design/tokens.json`](../design/tokens.json)), no UI framework, no icon or emoji library.
+Plain CSS (variables from [`design/tokens.json`](https://github.com/prateek0128/chat-call-module/blob/main/design/tokens.json)), no UI framework, no icon or emoji library.
 
 - Chat only. **There are no voice calls in this package** (the vanilla browser demo, `examples/backend/demo-server-python/demo.html`, has WebRTC calls).
   Calls are a callback slot: pass `onCall` and you get a call button and "Call back" on call entries.
@@ -15,14 +15,18 @@ Plain CSS (variables from [`design/tokens.json`](../design/tokens.json)), no UI 
 cd web && npm install && npm run build       # dist/index.js, dist/index.d.ts, dist/styles.css
 ```
 
-In your app (a monorepo path or a registry, as you prefer):
+```bash
+npm install @snakechat/commskit-web react react-dom
+```
+
+Or in `package.json`:
 
 ```jsonc
-"dependencies": { "commskit-web": "file:../commskit/web", "react": "^19", "react-dom": "^19" }
+"dependencies": { "@snakechat/commskit-web": "^0.1.0", "react": "^19", "react-dom": "^19" }
 ```
 
 ```ts
-import "commskit-web/styles.css";
+import "@snakechat/commskit-web/styles.css";
 ```
 
 If your bundler resolves a linked package's own `react`, make sure there is a single copy (Vite: `resolve.dedupe: ["react", "react-dom"]`).
@@ -30,8 +34,8 @@ If your bundler resolves a linked package's own `react`, make sure there is a si
 ## Quick start
 
 ```tsx
-import { AppearanceProvider, ChatApp, CommsStack } from "commskit-web";
-import "commskit-web/styles.css";
+import { AppearanceProvider, ChatApp, CommsStack } from "@snakechat/commskit-web";
+import "@snakechat/commskit-web/styles.css";
 
 const config = {
   baseUrl: "https://api.example.com",            // REST; the socket URL is derived (wss://api.example.com/ws/<token>)
@@ -137,12 +141,12 @@ Style hooks: classes are prefixed `ck-`; override variables on `.ck-root` or rul
 
 **What end users can change** (Appearance sheet, saved per browser): colour mode, chat theme, wallpaper (solid, gradient or their own photo; all chats or one chat), **text size** (small / medium / large) and **density** (comfortable / compact). `useAppearance()` exposes `textSize`, `density`, `setTextSize` and `setDensity`.
 
-Full guide: [Customizing the UI](../docs/web/04-customizing-the-ui.md).
+Full guide: [Customizing the UI](https://github.com/prateek0128/chat-call-module/blob/main/docs/web/04-customizing-the-ui.md).
 
 **Replacing components** (developers): pass `components` to `AppearanceProvider`. A replacement gets the same props as the built-in, so it keeps the full chat behaviour, and may render the built-in itself.
 
 ```tsx
-import { AppearanceProvider, DefaultAvatar, type CommsComponents } from "commskit-web";
+import { AppearanceProvider, DefaultAvatar, type CommsComponents } from "@snakechat/commskit-web";
 
 const MyBubble: CommsComponents["MessageBubble"] = ({ message }) => <div className="my-bubble">{message.content}</div>;
 
@@ -174,8 +178,8 @@ Current Chrome, Edge, Firefox and Safari (16.4+). Uses `WebSocket`, `ResizeObser
 - One engine, two UIs: `mobile/src/engine/index.ts` (`commskit/engine`) re-exports the socket client (`CommsClient`), `ChatStore`,
   `ModerationStore`, `UserDirectory`, wire types, and the pure UI helpers (formatting, grouping, previews, last seen, filters, document badges,
   message actions, sticky date, tokens, `createTheme`, appearance model). It imports neither `react` nor `react-native`
-  (`mobile/__tests__/engineEntry.test.ts`). `commskit-web` aliases it (`tsconfig` `paths`, `tsup` / `vitest` aliases) and **bundles** it into
-  `dist/index.js`, so apps install only `commskit-web`. Nothing from `react-native` is pulled in.
+  (`mobile/__tests__/engineEntry.test.ts`). `@snakechat/commskit-web` aliases it (`tsconfig` `paths`, `tsup` / `vitest` aliases) and **bundles** it into
+  `dist/index.js`, so apps install only `@snakechat/commskit-web`. Nothing from `react-native` is pulled in.
 - The providers and hooks (`CommsWebProvider`, `ChatProvider`, `useConversation`, ...) are thin React bindings with the same names and
   return shapes as the RN ones; `CommsWebProvider` uses the browser `WebSocket` and the tab visibility as the "app state".
 - Not shared: components and CSS (DOM vs native views), and the call stack.
