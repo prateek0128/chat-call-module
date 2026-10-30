@@ -6,6 +6,8 @@ import { useColorScheme } from "react-native";
 import { createTheme, lightTheme, resolveScheme, type Theme, type ThemeOverrides } from "./createTheme";
 import type { ColorScheme, PresetName } from "./tokens";
 import type { IconName } from "./iconNames";
+import { applyDisplay, type Density, type TextSize } from "./display";
+import { SlotsProvider, type ComponentSlots } from "./slots";
 
 export interface IconRenderProps {
   size: number;
@@ -35,16 +37,21 @@ export interface ThemeProviderProps {
    * <AppearanceProvider> sets this (and `colorScheme`) from the user's choice.
    */
   preset?: PresetName;
+  /** End-user reading preferences, applied on top of the resolved theme (set by <AppearanceProvider>). */
+  textSize?: TextSize;
+  density?: Density;
   /** `"system"` (default) follows the OS setting via `useColorScheme()`. */
   colorScheme?: ColorScheme | "system";
   /** Swap the built-in glyph icons for your icon set (e.g. @expo/vector-icons). */
   renderIcon?: IconRenderer;
+  /** Replace built-in components (Avatar; chat-ui: MessageBubble, Composer, ConversationRow). Replacements get the default's props. */
+  components?: ComponentSlots;
 }
 
 const isTheme = (t: unknown): t is Theme =>
   !!t && typeof t === "object" && "scheme" in (t as Theme) && "colors" in (t as Theme) && "layout" in (t as Theme) && "space" in (t as Theme);
 
-export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme, colorScheme = "system", preset, renderIcon }) => {
+export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme, colorScheme = "system", preset, textSize, density, renderIcon, components }) => {
   const system = useColorScheme();
   const scheme = resolveScheme(colorScheme, system);
   const value = useMemo<ThemeContextValue>(() => {
@@ -52,9 +59,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, theme, c
     if (typeof theme === "function") resolved = theme(scheme, preset || "indigo");
     else if (isTheme(theme)) resolved = theme;
     else resolved = createTheme(preset ? { ...(theme || {}), preset } : theme || {}, scheme);
-    return { theme: resolved, renderIcon };
-  }, [theme, scheme, preset, renderIcon]);
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+    return { theme: applyDisplay(resolved, { textSize, density }), renderIcon };
+  }, [theme, scheme, preset, textSize, density, renderIcon]);
+  return <ThemeContext.Provider value={value}>
+      <SlotsProvider components={components}>{children}</SlotsProvider>
+    </ThemeContext.Provider>;
 };
 
 /** Current theme (light defaults when there is no ThemeProvider). */

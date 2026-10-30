@@ -7,7 +7,7 @@ A message sent from the web shows up in the phone app, and the other way round.
 Everything here was checked against the code in `web/`, `mobile/src/engine`, `examples/web-app` and `backend/`.
 Items marked **(unverified)** could not be confirmed from the code.
 
-Series: **01 Overview (this file)** | [02 Keys, secrets, WebSockets, placeholders](02-keys-secrets-websockets-and-placeholders.md) | [03 Using, running, deploying](03-using-running-and-deploying.md) | [Web example app](../example/web-example.md) | [Design system](../design/design-overview.md)
+Series: **01 Overview (this file)** | [02 Keys, secrets, WebSockets, placeholders](02-keys-secrets-websockets-and-placeholders.md) | [03 Using, running, deploying](03-using-running-and-deploying.md) | [04 Customizing the UI](04-customizing-the-ui.md) | [Web example app](../example/web-example.md) | [Design system](../design/design-overview.md)
 
 ## Table of contents
 1. [What it is](#1-what-it-is)

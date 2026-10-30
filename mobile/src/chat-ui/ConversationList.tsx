@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, ReactElement, useCallback, useMemo, useState } from "react";
 import { FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, type ListRenderItemInfo } from "react-native";
 import type { Conversation } from "../chat/types";
@@ -42,7 +43,7 @@ export interface ConversationListProps {
 const keyExtractor = (c: Conversation) => String(c.user_id);
 const getItemLayout = (_: unknown, index: number) => ({ length: CONVERSATION_ROW_HEIGHT, offset: CONVERSATION_ROW_HEIGHT * index, index });
 
-export const ConversationList = memo(function ConversationList({
+export const DefaultConversationList = memo(function ConversationList({
   conversations,
   loaded,
   onOpenConversation,
@@ -222,3 +223,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const ConversationList = slot("ConversationList", DefaultConversationList);

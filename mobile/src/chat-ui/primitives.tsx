@@ -1,4 +1,5 @@
 /** Small internal building blocks shared by chat-ui components. */
+import { slot } from "../theme";
 import { memo } from "react";
 import { View, type StyleProp, type TextStyle, type ViewStyle } from "react-native";
 import { lineHeightFor, type Theme } from "../theme";
@@ -24,6 +25,9 @@ export interface SkeletonBoxProps {
 }
 
 /** Static placeholder block (no shimmer: calm motion, nothing to stop for reduced motion). */
-export const SkeletonBox = memo(function SkeletonBox({ theme, width, height, radius, style }: SkeletonBoxProps) {
+export const DefaultSkeletonBox = memo(function SkeletonBox({ theme, width, height, radius, style }: SkeletonBoxProps) {
   return <View style={[{ width, height, borderRadius: radius ?? theme.radius.sm, backgroundColor: theme.colors.surfaceSunken }, style]} />;
 });
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const SkeletonBox = slot("SkeletonBox", DefaultSkeletonBox);

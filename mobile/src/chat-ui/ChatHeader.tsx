@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, ReactNode, useMemo, useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { Avatar, Icon, ScalePressable, shadowStyle, useTheme, type Theme } from "../theme";
@@ -53,7 +54,7 @@ export interface ChatHeaderProps {
 
 const HEADER_HEIGHT = 56;
 
-export const ChatHeader = memo(function ChatHeader({
+export const DefaultChatHeader = memo(function ChatHeader({
   peerId,
   name,
   avatarUri,
@@ -192,3 +193,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const ChatHeader = slot("ChatHeader", DefaultChatHeader);

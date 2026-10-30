@@ -29,13 +29,17 @@ afterEach(() => {
   act(() => mounted.splice(0).forEach((r) => r.unmount()));
 });
 const realError = console.error;
+const RNMock = require("react-native");
+const realReduceMotion = RNMock.AccessibilityInfo.isReduceMotionEnabled;
 beforeAll(() => {
+  RNMock.AccessibilityInfo.isReduceMotionEnabled = () => ({ then: (cb: (v: boolean) => void) => (cb(false), { catch: () => undefined }) });
   console.error = (...args: any[]) => {
     if (typeof args[0] === "string" && args[0].includes("react-test-renderer is deprecated")) return;
     realError(...args);
   };
 });
 afterAll(() => {
+  RNMock.AccessibilityInfo.isReduceMotionEnabled = realReduceMotion;
   console.error = realError;
 });
 
@@ -124,7 +128,7 @@ describe("AppearanceProvider", () => {
   it("controlled mode reports changes through onChange", () => {
     const seen: string[] = [];
     render(
-      <AppearanceProvider value={{ mode: "light", preset: "amber", wallpaper: { kind: "default" }, perChat: {} }} onChange={(n) => seen.push(n.preset)}>
+      <AppearanceProvider value={{ mode: "light", preset: "amber", textSize: "medium", density: "comfortable", wallpaper: { kind: "default" }, perChat: {} }} onChange={(n) => seen.push(n.preset)}>
         <Probe />
       </AppearanceProvider>,
     );
@@ -197,7 +201,7 @@ describe("AppearanceSheet", () => {
       </AppearanceProvider>,
     );
     expect(byTestId(r, "appearance-preview")).toHaveLength(1);
-    for (const label of ["Mode", "Theme", "Wallpaper", "Auto", "Light", "Dark", "Rose theme", "Graphite theme", "Default wallpaper", "Colour 1", "Gradient 5", "Choose image…"])
+    for (const label of ["Mode", "Text size", "Density", "Large", "Compact", "Theme", "Wallpaper", "Auto", "Light", "Dark", "Rose theme", "Graphite theme", "Default wallpaper", "Colour 1", "Gradient 5", "Choose image…"])
       expect(hasLabel(r, label)).toBe(true);
     expect(hasLabel(r, "This chat")).toBe(false);
     expect(byLabel(r, "Indigo theme").props.accessibilityRole).toBe("radio");

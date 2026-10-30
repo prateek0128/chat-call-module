@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import type { ChatMessage } from "../chat/types";
@@ -25,7 +26,7 @@ export interface InAppMessageBannerProps extends UseInAppBannerOptions {
  * Tap opens the chat, swipe up / ✕ / 4 s dismisses it. Mount it ONCE near the app root,
  * inside <ChatProvider> (and <ThemeProvider>), above your navigator so it overlays every screen.
  */
-export const InAppMessageBanner = memo(function InAppMessageBanner({ onOpenChat, insets, swipeToDismiss = true, soundSource, soundMuted, ...options }: InAppMessageBannerProps) {
+export const DefaultInAppMessageBanner = memo(function InAppMessageBanner({ onOpenChat, insets, swipeToDismiss = true, soundSource, soundMuted, ...options }: InAppMessageBannerProps) {
   const theme = useTheme();
   const s = useStyles(theme);
   const safe = useSafeInsets(insets);
@@ -115,3 +116,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const InAppMessageBanner = slot("InAppMessageBanner", DefaultInAppMessageBanner);

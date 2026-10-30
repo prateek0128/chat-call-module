@@ -1,4 +1,5 @@
 /** MessageBubble + MessageList (grouping, date separators, sticky date, windowing, jump-to-latest). */
+import { slot } from "./components";
 import React, { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   buildMessageRows,
@@ -32,7 +33,7 @@ import { Icon } from "./ui";
 import { cx, resolveMediaUrl, splitLinks } from "./util";
 
 /** Message text with clickable links (rel=noopener noreferrer, new tab). */
-export const Linkified: React.FC<{ text: string }> = ({ text }) => (
+export const DefaultLinkified: React.FC<{ text: string }> = ({ text }) => (
   <>
     {splitLinks(text).map((p, i) =>
       p.type === "link" ? (
@@ -72,7 +73,7 @@ export interface MessageBubbleProps extends BubbleHandlers {
 
 const LONG_PRESS_MS = 450;
 
-export const MessageBubble = memo(function MessageBubble(props: MessageBubbleProps) {
+export const DefaultMessageBubble = memo(function MessageBubble(props: MessageBubbleProps) {
   const { message: m, groupStart, groupEnd, peerId, peerName, myId, baseUrl, highlighted, clock, swipeToReply = true, index } = props;
   const reduced = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
@@ -331,7 +332,7 @@ export interface MessageListProps extends BubbleHandlers {
 const NEAR_BOTTOM = 80;
 const NEAR_TOP = 240;
 
-export const MessageList: React.FC<MessageListProps> = (props) => {
+export const DefaultMessageList: React.FC<MessageListProps> = (props) => {
   const { messages, peerId, peerName, myId, baseUrl, loading, loadingMore, hasMore, typing, onLoadMore, windowSize = 120, highlightId, clock, swipeToReply } = props;
   const reduced = useReducedMotion();
   const scroller = useRef<HTMLDivElement>(null);
@@ -590,3 +591,8 @@ export const MessageList: React.FC<MessageListProps> = (props) => {
     </div>
   );
 };
+
+// Host-replaceable (see components.tsx): the exported name looks up `components.<Name>`, falling back to the Default one.
+export const Linkified = slot("Linkified", DefaultLinkified);
+export const MessageBubble = slot("MessageBubble", DefaultMessageBubble);
+export const MessageList = slot("MessageList", DefaultMessageList);

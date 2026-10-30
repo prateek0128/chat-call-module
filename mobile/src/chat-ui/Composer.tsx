@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   StyleSheet,
@@ -51,7 +52,7 @@ const TYPING_IDLE_MS = 3000;
  * Attach button, auto-growing field (1..maxLines lines), Send button (accent; disabled when empty).
  * Place it at the bottom of a KeyboardAvoidingView (ChatScreen does).
  */
-export const Composer = memo(function Composer({
+export const DefaultComposer = memo(function Composer({
   onSend,
   onAttach,
   onTypingChange,
@@ -242,3 +243,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const Composer = slot("Composer", DefaultComposer);

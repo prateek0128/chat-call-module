@@ -3,6 +3,7 @@
  * It reads useCall(), shows CallScreen as a full-screen Modal while a call is active (and
  * the ended / failed screen afterwards), and supports minimising to a "Return to call" pill.
  */
+import { slot } from "../theme";
 import { memo, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Modal, View } from "react-native";
 import { useComms } from "../core";
@@ -46,7 +47,7 @@ interface PendingError {
   callId?: string;
 }
 
-export const CallOverlay = memo(function CallOverlay({
+export const DefaultCallOverlay = memo(function CallOverlay({
   onOpenChat,
   showMessageAction,
   speakerAvailable = true,
@@ -267,3 +268,6 @@ export const CallOverlay = memo(function CallOverlay({
     </>
   );
 });
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const CallOverlay = slot("CallOverlay", DefaultCallOverlay);

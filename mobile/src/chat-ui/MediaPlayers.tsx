@@ -5,6 +5,7 @@
  * - AudioMessageRow: play / pause row via expo-audio, else expo-av. `audioPlaybackAvailable()`
  *   is false without both, and MessageBubble shows the file card.
  */
+import { slot } from "../theme";
 import { memo, useCallback, useEffect, useRef, useState } from "react";
 import { Modal, Text, View } from "react-native";
 import { Icon, ScalePressable, useSafeInsets, useTheme, type EdgeInsets } from "../theme";
@@ -23,7 +24,7 @@ export interface VideoPlayerModalProps {
 }
 
 /** Full-screen video player (expo-video, native controls). Renders nothing without expo-video. */
-export const VideoPlayerModal = memo(function VideoPlayerModal({ uri, onClose, insets }: VideoPlayerModalProps) {
+export const DefaultVideoPlayerModal = memo(function VideoPlayerModal({ uri, onClose, insets }: VideoPlayerModalProps) {
   const theme = useTheme();
   const safe = useSafeInsets(insets);
   const video = getVideo();
@@ -77,7 +78,7 @@ export interface AudioMessageRowProps {
 }
 
 /** Play / pause + duration for an audio message (expo-audio, else expo-av). */
-export const AudioMessageRow = memo(function AudioMessageRow(props: AudioMessageRowProps) {
+export const DefaultAudioMessageRow = memo(function AudioMessageRow(props: AudioMessageRowProps) {
   const audio = getExpoAudio();
   if (audio) return <ExpoAudioRow audio={audio} {...props} />;
   const av = getExpoAv();
@@ -166,3 +167,7 @@ const ExpoAvRow = ({ av, uri, duration, ...rest }: AudioMessageRowProps & { av: 
   }, [av, uri, playing]);
   return <AudioRowView playing={playing} onToggle={() => void toggle()} position={position} duration={length ?? duration} {...rest} />;
 };
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const VideoPlayerModal = slot("VideoPlayerModal", DefaultVideoPlayerModal);
+export const AudioMessageRow = slot("AudioMessageRow", DefaultAudioMessageRow);

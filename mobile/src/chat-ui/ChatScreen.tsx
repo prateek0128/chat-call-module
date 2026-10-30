@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { KeyboardAvoidingView, Linking, Platform, StyleSheet, View, type LayoutChangeEvent } from "react-native";
 import { useUserProfile } from "../core";
@@ -170,7 +171,7 @@ export interface ChatScreenProps {
 const LOAD_TIMEOUT_MS = 12000;
 
 /** Ready-made conversation screen wired to `useConversation` (header, messages, composer, attachments). */
-export const ChatScreen = memo(function ChatScreen({
+export const DefaultChatScreen = memo(function ChatScreen({
   peerId,
   chatId,
   onBack,
@@ -637,3 +638,6 @@ export const ChatScreen = memo(function ChatScreen({
 });
 
 const styles = StyleSheet.create({ fill: { flex: 1 } });
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const ChatScreen = slot("ChatScreen", DefaultChatScreen);

@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useEffect, useRef } from "react";
 import { Animated, View } from "react-native";
 import { useReducedMotion, useTheme } from "../theme";
@@ -11,7 +12,7 @@ const CYCLE_MS = 1200;
 const STAGGER_MS = 150;
 
 /** Incoming-side bubble with 3 dots: staggered opacity/translateY loop (1.2 s). Static with reduced motion. */
-export const TypingIndicator = memo(function TypingIndicator({ name }: TypingIndicatorProps) {
+export const DefaultTypingIndicator = memo(function TypingIndicator({ name }: TypingIndicatorProps) {
   const theme = useTheme();
   const reduced = useReducedMotion();
   const dots = useRef([new Animated.Value(0), new Animated.Value(0), new Animated.Value(0)]).current;
@@ -73,3 +74,6 @@ export const TypingIndicator = memo(function TypingIndicator({ name }: TypingInd
     </View>
   );
 });
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const TypingIndicator = slot("TypingIndicator", DefaultTypingIndicator);

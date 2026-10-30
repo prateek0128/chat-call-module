@@ -1,9 +1,30 @@
 {
-  "name": "commskit",
+  "name": "@snakechat/commskit-mobile",
   "version": "0.1.0",
   "description": "Generic chat + voice-call kit for React Native / Expo (mobile half of commskit).",
+  "keywords": [
+    "chat",
+    "voice-call",
+    "video-call",
+    "webrtc",
+    "react-native",
+    "expo",
+    "realtime",
+    "commskit"
+  ],
   "license": "MIT",
-  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prateek0128/chat-call-module.git",
+    "directory": "mobile"
+  },
+  "homepage": "https://github.com/prateek0128/chat-call-module/tree/main/mobile#readme",
+  "bugs": {
+    "url": "https://github.com/prateek0128/chat-call-module/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "src/index.ts",
   "react-native": "src/index.ts",
   "types": "src/index.ts",

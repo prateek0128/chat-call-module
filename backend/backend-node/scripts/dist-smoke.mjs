@@ -6,15 +6,15 @@ import { SignJWT } from "jose";
 import { Kysely, SqliteDialect } from "kysely";
 import WebSocket from "ws";
 
-import { CommsHub, JwtAuth, StaticUserDirectory, restListener } from "commskit-node/core";
-import { ChatFeature } from "commskit-node/chat";
-import { CallFeature } from "commskit-node/call";
-import { ModerationFeature } from "commskit-node/moderation";
-import { linkChatAndCall, linkModeration } from "commskit-node/integration";
-import { ExpoPushSender, DevicePushRouter, SqlDeviceRegistry } from "commskit-node/push";
-import { RedisBridge } from "commskit-node/redis";
-import { S3Storage } from "commskit-node/s3";
-import { ensureSchema, ChatFeature as RootChatFeature } from "commskit-node";
+import { CommsHub, JwtAuth, StaticUserDirectory, restListener } from "@snakechat/commskit-node/core";
+import { ChatFeature } from "@snakechat/commskit-node/chat";
+import { CallFeature } from "@snakechat/commskit-node/call";
+import { ModerationFeature } from "@snakechat/commskit-node/moderation";
+import { linkChatAndCall, linkModeration } from "@snakechat/commskit-node/integration";
+import { ExpoPushSender, DevicePushRouter, SqlDeviceRegistry } from "@snakechat/commskit-node/push";
+import { RedisBridge } from "@snakechat/commskit-node/redis";
+import { S3Storage } from "@snakechat/commskit-node/s3";
+import { ensureSchema, ChatFeature as RootChatFeature } from "@snakechat/commskit-node";
 
 const SECRET = "smoke-test-secret-not-a-real-secret-0001";
 const fail = (msg) => {

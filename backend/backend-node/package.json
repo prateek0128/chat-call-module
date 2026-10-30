@@ -1,9 +1,33 @@
 {
-  "name": "commskit-node",
+  "name": "@snakechat/commskit-node",
   "version": "0.1.0",
   "description": "Node.js/TypeScript server for the commskit wire protocol: chat, calls, moderation, push. Sibling of the Python `commskit` backend.",
+  "keywords": [
+    "chat",
+    "voice-call",
+    "video-call",
+    "webrtc",
+    "websocket",
+    "realtime",
+    "signaling",
+    "fastify",
+    "express",
+    "commskit"
+  ],
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prateek0128/chat-call-module.git",
+    "directory": "backend/backend-node"
+  },
+  "homepage": "https://github.com/prateek0128/chat-call-module/tree/main/backend/backend-node#readme",
+  "bugs": {
+    "url": "https://github.com/prateek0128/chat-call-module/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "engines": {
     "node": ">=20"
   },

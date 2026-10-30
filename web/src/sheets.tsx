@@ -1,4 +1,5 @@
 /** Sheets and viewers: AppearanceSheet, ReportSheet, BlockedUsersScreen, AttachmentPreviewSheet, ImageLightbox, DocumentViewer. */
+import { slot } from "./components";
 import React, { useEffect, useRef, useState } from "react";
 import {
   checkAttachmentSize,
@@ -20,6 +21,17 @@ import { cx, downloadFile, downscaleImageFile } from "./util";
 
 // ---- AppearanceSheet ----------------------------------------------------------------------------------------
 
+const TEXT_SIZE_OPTIONS = [
+  { id: "small", label: "Small" },
+  { id: "medium", label: "Medium" },
+  { id: "large", label: "Large" },
+] as const;
+
+const DENSITY_OPTIONS = [
+  { id: "comfortable", label: "Comfortable" },
+  { id: "compact", label: "Compact" },
+] as const;
+
 const MODES = [
   { id: "system", label: "Auto" },
   { id: "light", label: "Light" },
@@ -29,7 +41,7 @@ const MODES = [
 const sameWallpaper = (a: Wallpaper, b: Wallpaper): boolean =>
   a.kind === b.kind && (a.kind === "default" || (a.kind === "image" && b.kind === "image" ? a.uri === b.uri : "index" in a && "index" in b && a.index === b.index));
 
-export const AppearanceSheet: React.FC<{
+export const DefaultAppearanceSheet: React.FC<{
   /** Per-chat mode: opens on "This chat". Omit for the global sheet. */
   peerId?: string | null;
   peerName?: string | null;
@@ -127,6 +139,28 @@ export const AppearanceSheet: React.FC<{
         ) : null}
 
         <section>
+          <h3 className="ck-section-title">Text size</h3>
+          <div className="ck-segmented" role="radiogroup" aria-label="Text size">
+            {TEXT_SIZE_OPTIONS.map((o) => (
+              <button key={o.id} type="button" role="radio" aria-checked={a.textSize === o.id} className={cx("ck-seg", a.textSize === o.id && "is-selected")} onClick={() => a.setTextSize(o.id)}>
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <h3 className="ck-section-title">Density</h3>
+          <div className="ck-segmented" role="radiogroup" aria-label="Density">
+            {DENSITY_OPTIONS.map((o) => (
+              <button key={o.id} type="button" role="radio" aria-checked={a.density === o.id} className={cx("ck-seg", a.density === o.id && "is-selected")} onClick={() => a.setDensity(o.id)}>
+                {o.label}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section>
           <h3 className="ck-section-title">Mode</h3>
           <div className="ck-segmented" role="radiogroup" aria-label="Color mode">
             {MODES.map((m) => (
@@ -212,7 +246,7 @@ export const AppearanceSheet: React.FC<{
 
 // ---- ReportSheet ---------------------------------------------------------------------------------------------
 
-export const ReportSheet: React.FC<{
+export const DefaultReportSheet: React.FC<{
   peerId: string;
   name: string;
   /** Reporting one message (its id is sent with the report). */
@@ -282,7 +316,7 @@ export const ReportSheet: React.FC<{
 
 // ---- BlockedUsersScreen ----------------------------------------------------------------------------------------
 
-export const BlockedUsersScreen: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+export const DefaultBlockedUsersScreen: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const blocking = useBlocking();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -343,7 +377,7 @@ export interface PendingAttachment {
   url: string;
 }
 
-export const AttachmentPreviewSheet: React.FC<{
+export const DefaultAttachmentPreviewSheet: React.FC<{
   attachment: PendingAttachment;
   maxBytes?: number;
   onSend: () => void;
@@ -404,7 +438,7 @@ export const shareUrl = async (url: string, title?: string | null): Promise<bool
   }
 };
 
-export const ImageLightbox: React.FC<{ url: string; name?: string | null; onClose: () => void }> = ({ url, name, onClose }) => (
+export const DefaultImageLightbox: React.FC<{ url: string; name?: string | null; onClose: () => void }> = ({ url, name, onClose }) => (
   <Dialog label={name ? `Photo ${name}` : "Photo"} onClose={onClose} variant="full" className="ck-lightbox">
     <div className="ck-lightbox-bar">
       <span className="ck-lightbox-name">{name}</span>
@@ -426,7 +460,7 @@ export const ImageLightbox: React.FC<{ url: string; name?: string | null; onClos
   </Dialog>
 );
 
-export const DocumentViewer: React.FC<{ url: string; name?: string | null; type?: string | null; size?: number | null; viewerUrl?: string | null; onClose: () => void }> = ({
+export const DefaultDocumentViewer: React.FC<{ url: string; name?: string | null; type?: string | null; size?: number | null; viewerUrl?: string | null; onClose: () => void }> = ({
   url,
   name,
   type,
@@ -460,3 +494,11 @@ export const DocumentViewer: React.FC<{ url: string; name?: string | null; type?
     </Dialog>
   );
 };
+
+// Host-replaceable (see components.tsx): the exported name looks up `components.<Name>`, falling back to the Default one.
+export const AppearanceSheet = slot("AppearanceSheet", DefaultAppearanceSheet);
+export const ReportSheet = slot("ReportSheet", DefaultReportSheet);
+export const BlockedUsersScreen = slot("BlockedUsersScreen", DefaultBlockedUsersScreen);
+export const AttachmentPreviewSheet = slot("AttachmentPreviewSheet", DefaultAttachmentPreviewSheet);
+export const ImageLightbox = slot("ImageLightbox", DefaultImageLightbox);
+export const DocumentViewer = slot("DocumentViewer", DefaultDocumentViewer);

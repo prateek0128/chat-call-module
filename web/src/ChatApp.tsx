@@ -1,3 +1,4 @@
+import { slot } from "./components";
 import React, { useCallback, useEffect, useState } from "react";
 import { decideLayout, MAX_CONTENT_WIDTH, type Conversation } from "commskit/engine";
 import { ChatScreen, type ChatScreenProps } from "./ChatScreen";
@@ -28,7 +29,7 @@ export interface ChatAppProps {
  * Ready-made responsive layout: phone = one pane with a back button, 700 px and up = list + chat side by side.
  * Fills its parent (give the parent a height, e.g. `100dvh`).
  */
-export const ChatApp: React.FC<ChatAppProps> = ({ selectedPeerId, defaultPeerId = null, onSelectedChange, chat, list, notifications = true, banners = true, placeholder, className }) => {
+export const DefaultChatApp: React.FC<ChatAppProps> = ({ selectedPeerId, defaultPeerId = null, onSelectedChange, chat, list, notifications = true, banners = true, placeholder, className }) => {
   const [ref, width] = useElementWidth<HTMLDivElement>();
   const layout = decideLayout(width);
   const [own, setOwn] = useState<string | null>(defaultPeerId);
@@ -101,3 +102,6 @@ export const ChatApp: React.FC<ChatAppProps> = ({ selectedPeerId, defaultPeerId 
     </div>
   );
 };
+
+// Host-replaceable (see components.tsx): the exported name looks up `components.<Name>`, falling back to the Default one.
+export const ChatApp = slot("ChatApp", DefaultChatApp);

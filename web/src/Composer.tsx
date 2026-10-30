@@ -1,3 +1,4 @@
+import { slot } from "./components";
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { blockedComposerText, canSendText, layout, rateLimitText, type BlockedComposerKind } from "commskit/engine";
 import { PopupMenu, Icon } from "./ui";
@@ -30,7 +31,7 @@ export interface ComposerProps {
 
 const isApplePlatform = () => typeof navigator !== "undefined" && /Mac|iPhone|iPad/i.test(navigator.platform || navigator.userAgent || "");
 
-export const Composer: React.FC<ComposerProps> = ({
+export const DefaultComposer: React.FC<ComposerProps> = ({
   onSend,
   onAttach,
   onTyping,
@@ -253,3 +254,6 @@ export const Composer: React.FC<ComposerProps> = ({
     </div>
   );
 };
+
+// Host-replaceable (see components.tsx): the exported name looks up `components.<Name>`, falling back to the Default one.
+export const Composer = slot("Composer", DefaultComposer);

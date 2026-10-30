@@ -127,7 +127,7 @@ describe("AppearanceProvider", () => {
     const onChange = vi.fn();
     const storage = memory();
     render(
-      <AppearanceProvider storage={storage} value={{ mode: "dark", preset: "amber", wallpaper: { kind: "default" }, perChat: {} }} onChange={onChange}>
+      <AppearanceProvider storage={storage} value={{ mode: "dark", preset: "amber", textSize: "medium", density: "comfortable", wallpaper: { kind: "default" }, perChat: {} }} onChange={onChange}>
         <Probe />
       </AppearanceProvider>,
     );
@@ -265,5 +265,37 @@ describe("wallpapers and AppearanceSheet", () => {
     fireEvent.change(input, { target: { files: [new File(["x"], "a.txt", { type: "text/plain" })] } });
     await screen.findByText("Choose an image file.");
     expect(onNotice).toHaveBeenCalledWith("Choose an image file.");
+  });
+});
+
+describe("text size and density", () => {
+  it("setTextSize / setDensity rescale the CSS variables and persist", () => {
+    const store = memory();
+    render(
+      <AppearanceProvider storage={store}>
+        <Probe />
+      </AppearanceProvider>,
+    );
+    const body = parseInt(root().style.getPropertyValue("--ck-font-body"), 10);
+    const lg = parseInt(root().style.getPropertyValue("--ck-space-lg"), 10);
+    act(() => ctl.setTextSize("large"));
+    act(() => ctl.setDensity("compact"));
+    expect(parseInt(root().style.getPropertyValue("--ck-font-body"), 10)).toBeGreaterThan(body);
+    expect(parseInt(root().style.getPropertyValue("--ck-space-lg"), 10)).toBeLessThan(lg);
+    expect(JSON.parse(store.data[APPEARANCE_STORAGE_KEY])).toMatchObject({ textSize: "large", density: "compact" });
+  });
+
+  it("the sheet has Text size and Density radios that drive the controller", () => {
+    render(
+      <AppearanceProvider storage={null}>
+        <Probe />
+        <AppearanceSheet onClose={() => {}} />
+      </AppearanceProvider>,
+    );
+    const dlg = screen.getByRole("dialog");
+    fireEvent.click(within(dlg).getByRole("radio", { name: "Large" }));
+    fireEvent.click(within(dlg).getByRole("radio", { name: "Compact" }));
+    expect(ctl.textSize).toBe("large");
+    expect(ctl.density).toBe("compact");
   });
 });

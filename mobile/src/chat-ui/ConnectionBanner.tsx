@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ScalePressable, useTheme, withAlpha, type Theme } from "../theme";
@@ -36,7 +37,7 @@ export const ConnectionBannerView = memo(function ConnectionBannerView({ model, 
 });
 
 /** Slim bar under the header bound to the shared socket (needs <CommsProvider>). */
-export const ConnectionBanner = memo(function ConnectionBanner() {
+export const DefaultConnectionBanner = memo(function ConnectionBanner() {
   const { retry, ...model } = useConnectionBanner();
   return <ConnectionBannerView model={model} onRetry={retry} />;
 });
@@ -52,3 +53,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const ConnectionBanner = slot("ConnectionBanner", DefaultConnectionBanner);

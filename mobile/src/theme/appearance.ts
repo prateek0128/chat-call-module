@@ -3,6 +3,7 @@
  * Pure: no React, no react-native. Local device preferences only; nothing is sent to the peer.
  */
 import { isPresetName } from "./createTheme";
+import { DEFAULT_DENSITY, DEFAULT_TEXT_SIZE, isDensity, isTextSize, type Density, type TextSize } from "./display";
 import { colorTokens, wallpapers, type ColorScheme, type PresetName } from "./tokens";
 
 export type AppearanceMode = "system" | "light" | "dark";
@@ -21,6 +22,10 @@ export type Wallpaper =
 export interface AppearanceState {
   mode: AppearanceMode;
   preset: PresetName;
+  /** Text size (scales font sizes). */
+  textSize: TextSize;
+  /** Spacing density (comfortable or compact). */
+  density: Density;
   /** Global wallpaper ("All chats"). */
   wallpaper: Wallpaper;
   /** Per-chat overrides by peer id ("This chat only"). */
@@ -29,7 +34,7 @@ export interface AppearanceState {
 
 export const DEFAULT_WALLPAPER: Wallpaper = { kind: "default" };
 
-export const DEFAULT_APPEARANCE: AppearanceState = { mode: "system", preset: "indigo", wallpaper: DEFAULT_WALLPAPER, perChat: {} };
+export const DEFAULT_APPEARANCE: AppearanceState = { mode: "system", preset: "indigo", textSize: DEFAULT_TEXT_SIZE, density: DEFAULT_DENSITY, wallpaper: DEFAULT_WALLPAPER, perChat: {} };
 
 /** What to draw for a wallpaper in a scheme. */
 export type WallpaperRender =
@@ -126,6 +131,8 @@ export const sanitizeAppearance = (input: unknown): AppearanceState => {
   return {
     mode: isMode(v.mode) ? v.mode : DEFAULT_APPEARANCE.mode,
     preset: isPresetName(v.preset) ? v.preset : DEFAULT_APPEARANCE.preset,
+    textSize: isTextSize(v.textSize) ? v.textSize : DEFAULT_TEXT_SIZE,
+    density: isDensity(v.density) ? v.density : DEFAULT_DENSITY,
     wallpaper: v.wallpaper === undefined ? DEFAULT_WALLPAPER : sanitizeWallpaper(v.wallpaper),
     perChat,
   };

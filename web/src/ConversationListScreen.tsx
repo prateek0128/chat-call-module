@@ -1,3 +1,4 @@
+import { slot } from "./components";
 import React, { memo, ReactNode, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import {
   applyConversationFilter,
@@ -33,7 +34,7 @@ export interface ConversationRowProps {
   clock?: ClockFormat;
 }
 
-export const ConversationRow = memo(function ConversationRow({ conversation: c, typing = false, selected = false, tabbable = false, onSelect, clock }: ConversationRowProps) {
+export const DefaultConversationRow = memo(function ConversationRow({ conversation: c, typing = false, selected = false, tabbable = false, onSelect, clock }: ConversationRowProps) {
   const name = displayName(c);
   const blocked = blockedRowLabel(c, name);
   const preview = conversationPreview(c, typing && !blocked);
@@ -124,7 +125,7 @@ export interface ConversationListScreenProps {
   className?: string;
 }
 
-export const ConversationListScreen: React.FC<ConversationListScreenProps> = ({
+export const DefaultConversationListScreen: React.FC<ConversationListScreenProps> = ({
   selectedPeerId,
   onSelect,
   title = "Chats",
@@ -275,3 +276,7 @@ export const ConversationListScreen: React.FC<ConversationListScreenProps> = ({
     </section>
   );
 };
+
+// Host-replaceable (see components.tsx): the exported name looks up `components.<Name>`, falling back to the Default one.
+export const ConversationRow = slot("ConversationRow", DefaultConversationRow);
+export const ConversationListScreen = slot("ConversationListScreen", DefaultConversationListScreen);

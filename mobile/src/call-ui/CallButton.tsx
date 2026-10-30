@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useEffect, useRef } from "react";
 import { Animated, Text, View } from "react-native";
 import { Icon, ScalePressable, useReducedMotion, useTheme, type IconName } from "../theme";
@@ -23,7 +24,7 @@ export interface CallButtonProps {
 }
 
 /** Round, labelled call control with press scale (0.96). */
-export const CallButton = memo(function CallButton({
+export const DefaultCallButton = memo(function CallButton({
   icon,
   caption,
   accessibilityLabel,
@@ -104,3 +105,6 @@ export const CallButton = memo(function CallButton({
     </View>
   );
 });
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const CallButton = slot("CallButton", DefaultCallButton);

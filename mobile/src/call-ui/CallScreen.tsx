@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, ReactNode, useEffect, useRef } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { announce, Icon, lineHeightFor, ScalePressable, useReducedMotion, useSafeInsets, useTheme, type EdgeInsets } from "../theme";
@@ -34,7 +35,7 @@ export interface CallScreenProps {
  * connecting, active (timer, Mute, Speaker, Hang up), ended (summary), failed (reason + Close/Call again).
  * Presentational: CallOverlay wires it to `useCall()`.
  */
-export const CallScreen = memo(function CallScreen({
+export const DefaultCallScreen = memo(function CallScreen({
   model,
   connectedAt,
   isMuted = false,
@@ -168,3 +169,6 @@ export const CallScreen = memo(function CallScreen({
 });
 
 const styles = StyleSheet.create({ fill: { flex: 1 } });
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const CallScreen = slot("CallScreen", DefaultCallScreen);

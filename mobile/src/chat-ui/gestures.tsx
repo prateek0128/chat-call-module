@@ -5,6 +5,7 @@
  * its close button. Gestures run their callbacks on the JS thread (no reanimated needed).
  * The host app must be wrapped in RNGH's <GestureHandlerRootView>.
  */
+import { slot } from "../theme";
 import React, { memo, useEffect, useMemo, useRef } from "react";
 import { Animated, Text, View } from "react-native";
 import { useReducedMotion, useTheme } from "../theme";
@@ -22,7 +23,7 @@ export interface SwipeToReplyProps {
 }
 
 /** Swipe a bubble right to reply: the bubble follows the finger, a ↩ hint fades in, haptic tick at the threshold. */
-export const SwipeToReply = memo(function SwipeToReply({ enabled = true, onReply, children }: SwipeToReplyProps) {
+export const DefaultSwipeToReply = memo(function SwipeToReply({ enabled = true, onReply, children }: SwipeToReplyProps) {
   const RNGH = enabled ? getGestureHandler() : null;
   if (!RNGH) return <>{children}</>;
   return (
@@ -96,7 +97,7 @@ export interface SwipeUpToDismissProps {
 }
 
 /** Fling / drag a banner up to dismiss it (no-op wrapper without gesture handler). */
-export const SwipeUpToDismiss = memo(function SwipeUpToDismiss({ enabled = true, onDismiss, children }: SwipeUpToDismissProps) {
+export const DefaultSwipeUpToDismiss = memo(function SwipeUpToDismiss({ enabled = true, onDismiss, children }: SwipeUpToDismissProps) {
   const RNGH = enabled ? getGestureHandler() : null;
   const ref = useRef(onDismiss);
   ref.current = onDismiss;
@@ -124,3 +125,7 @@ export const SwipeUpToDismiss = memo(function SwipeUpToDismiss({ enabled = true,
     </GestureDetector>
   );
 });
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const SwipeToReply = slot("SwipeToReply", DefaultSwipeToReply);
+export const SwipeUpToDismiss = slot("SwipeUpToDismiss", DefaultSwipeUpToDismiss);

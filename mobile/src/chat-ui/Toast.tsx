@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useEffect, useMemo } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { announce, shadowStyle, useTheme, type Theme } from "../theme";
@@ -17,7 +18,7 @@ export interface ToastProps {
 }
 
 /** Small status pill (copied, download progress, errors). Announced to screen readers. */
-export const Toast = memo(function Toast({ toast, bottom = 0 }: ToastProps) {
+export const DefaultToast = memo(function Toast({ toast, bottom = 0 }: ToastProps) {
   const theme = useTheme();
   const s = useStyles(theme);
   const text = toast?.text;
@@ -62,3 +63,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const Toast = slot("Toast", DefaultToast);

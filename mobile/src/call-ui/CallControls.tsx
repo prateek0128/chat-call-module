@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo } from "react";
 import { View } from "react-native";
 import { useTheme, type IconName } from "../theme";
@@ -33,7 +34,7 @@ const ICONS: Record<CallControlId, IconName> = {
 const VARIANTS: Partial<Record<CallControlId, CallButtonVariant>> = { hangup: "hangup", decline: "hangup", accept: "accept", callAgain: "accept" };
 
 /** Row of call buttons for the current phase (order from the state mapping). */
-export const CallControls = memo(function CallControls(props: CallControlsProps) {
+export const DefaultCallControls = memo(function CallControls(props: CallControlsProps) {
   const theme = useTheme();
   const { controls, isMuted = false, isSpeakerOn = false, peerName } = props;
   const handler: Record<CallControlId, (() => void) | undefined> = {
@@ -72,3 +73,6 @@ export const CallControls = memo(function CallControls(props: CallControlsProps)
     </View>
   );
 });
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const CallControls = slot("CallControls", DefaultCallControls);

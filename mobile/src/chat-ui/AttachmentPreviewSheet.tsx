@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, Animated, Image, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { MAX_UPLOAD_BYTES } from "../chat/ChatStore";
@@ -18,7 +19,7 @@ export interface AttachmentPreviewSheetProps {
 }
 
 /** Modal sheet: thumbnail or file card, name, size, Cancel / Send. Checks the size limit before upload. */
-export const AttachmentPreviewSheet = memo(function AttachmentPreviewSheet({
+export const DefaultAttachmentPreviewSheet = memo(function AttachmentPreviewSheet({
   file,
   onCancel,
   onSend,
@@ -163,3 +164,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const AttachmentPreviewSheet = slot("AttachmentPreviewSheet", DefaultAttachmentPreviewSheet);

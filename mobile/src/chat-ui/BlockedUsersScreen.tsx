@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useBlocking } from "../moderation/hooks";
@@ -14,7 +15,7 @@ export interface BlockedUsersScreenProps {
 }
 
 /** "Blocked users" settings screen: list from GET /moderation/blocks with an Unblock button per row. Needs <ModerationProvider>. */
-export const BlockedUsersScreen = memo(function BlockedUsersScreen({ loadOnMount = true, insets, onUnblocked }: BlockedUsersScreenProps) {
+export const DefaultBlockedUsersScreen = memo(function BlockedUsersScreen({ loadOnMount = true, insets, onUnblocked }: BlockedUsersScreenProps) {
   const theme = useTheme();
   const s = useStyles(theme);
   const safe = useSafeInsets(insets);
@@ -118,3 +119,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const BlockedUsersScreen = slot("BlockedUsersScreen", DefaultBlockedUsersScreen);

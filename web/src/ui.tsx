@@ -1,4 +1,5 @@
 /** Shared UI primitives: Icon, Avatar, Dialog (focus trap), PopupMenu, toasts, connection banner. */
+import { slot } from "./components";
 import React, { CSSProperties, ReactNode, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { avatarColor, connectionBannerModel, initialsOf } from "commskit/engine";
 import { useTheme } from "./appearance";
@@ -45,7 +46,7 @@ const ICON_PATHS = {
 
 export type WebIconName = keyof typeof ICON_PATHS;
 
-export const Icon: React.FC<{ name: WebIconName; size?: number; className?: string; strokeWidth?: number }> = ({ name, size = 20, className, strokeWidth }) => (
+export const DefaultIcon: React.FC<{ name: WebIconName; size?: number; className?: string; strokeWidth?: number }> = ({ name, size = 20, className, strokeWidth }) => (
   <svg
     className={cx("ck-icon", className)}
     width={size}
@@ -65,7 +66,10 @@ export const Icon: React.FC<{ name: WebIconName; size?: number; className?: stri
 
 // ---- Avatar --------------------------------------------------------------------------------------------
 
-export const Avatar: React.FC<{ name?: string | null; id?: string | null; src?: string | null; size?: number; online?: boolean; className?: string }> = ({
+type AvatarProps = { name?: string | null; id?: string | null; src?: string | null; size?: number; online?: boolean; className?: string };
+
+/** The built-in avatar (a host replacement may render this). */
+export const DefaultAvatar: React.FC<AvatarProps> = ({
   name,
   id,
   src,
@@ -89,7 +93,7 @@ export const Avatar: React.FC<{ name?: string | null; id?: string | null; src?: 
 
 const FOCUSABLE = 'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-export const Dialog: React.FC<{
+export const DefaultDialog: React.FC<{
   label: string;
   onClose: () => void;
   children?: ReactNode;
@@ -143,7 +147,7 @@ export const Dialog: React.FC<{
   );
 };
 
-export const ConfirmDialog: React.FC<{
+export const DefaultConfirmDialog: React.FC<{
   title: string;
   text?: string;
   confirmLabel: string;
@@ -178,7 +182,7 @@ export interface MenuItem {
   onSelect: () => void;
 }
 
-export const PopupMenu: React.FC<{
+export const DefaultPopupMenu: React.FC<{
   items: MenuItem[];
   /** Viewport coordinates to open at (a click point or the bottom-left of a button). */
   anchor: { x: number; y: number; align?: "left" | "right"; above?: boolean };
@@ -271,7 +275,7 @@ export const PopupMenu: React.FC<{
 
 // ---- toasts, live region, connection banner ------------------------------------------------------------------
 
-export const ToastStack: React.FC<{ toasts: ToastItem[]; onDismiss: (id: number) => void }> = ({ toasts, onDismiss }) => (
+export const DefaultToastStack: React.FC<{ toasts: ToastItem[]; onDismiss: (id: number) => void }> = ({ toasts, onDismiss }) => (
   <div className="ck-toasts" role="status" aria-live="polite">
     {toasts.map((t) => (
       <div key={t.id} className="ck-toast" data-tone={t.tone || "info"}>
@@ -289,14 +293,14 @@ export const ToastStack: React.FC<{ toasts: ToastItem[]; onDismiss: (id: number)
   </div>
 );
 
-export const LiveRegion: React.FC<{ text: string }> = ({ text }) => (
+export const DefaultLiveRegion: React.FC<{ text: string }> = ({ text }) => (
   <div className="ck-sr-only" role="status" aria-live="polite" aria-atomic="true">
     {text}
   </div>
 );
 
 /** "Connecting…" / "Offline. Retrying in Ns" + Retry (hidden while connected). */
-export const ConnectionBanner: React.FC = () => {
+export const DefaultConnectionBanner: React.FC = () => {
   const info = useConnectionStatus();
   const { client } = useComms();
   const since = useRef(Date.now());
@@ -323,3 +327,13 @@ export const ConnectionBanner: React.FC = () => {
     </div>
   );
 };
+
+// Host-replaceable (see components.tsx): the exported name looks up `components.<Name>`, falling back to the Default one.
+export const Icon = slot("Icon", DefaultIcon);
+export const Dialog = slot("Dialog", DefaultDialog);
+export const ConfirmDialog = slot("ConfirmDialog", DefaultConfirmDialog);
+export const PopupMenu = slot("PopupMenu", DefaultPopupMenu);
+export const ToastStack = slot("ToastStack", DefaultToastStack);
+export const LiveRegion = slot("LiveRegion", DefaultLiveRegion);
+export const ConnectionBanner = slot("ConnectionBanner", DefaultConnectionBanner);
+export const Avatar = slot("Avatar", DefaultAvatar);

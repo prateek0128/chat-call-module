@@ -43,6 +43,7 @@ export {
 export { useWebNotifications, InAppMessageBanners, type NotificationPermissionState, type UseWebNotificationsOptions, type WebNotificationsApi } from "./notifications";
 
 // screens + components
+export { ComponentsProvider, slot, type CommsComponents } from "./components";
 export { ChatApp, type ChatAppProps } from "./ChatApp";
 export { ConversationListScreen, ConversationRow, displayName, type ConversationListScreenProps, type ConversationRowProps } from "./ConversationListScreen";
 export { ChatHeader, ChatScreen, type ChatGateInfo, type ChatHeaderMenuItem, type ChatHeaderProps, type ChatScreenProps } from "./ChatScreen";
@@ -84,3 +85,15 @@ export {
   type PresetName,
   type Wallpaper,
 } from "commskit/engine";
+
+// Built-in implementations, for host replacements that wrap them (see `components` on AppearanceProvider).
+export { DefaultAvatar } from "./ui";
+export { DefaultChatApp } from "./ChatApp";
+export { DefaultChatHeader, DefaultChatScreen } from "./ChatScreen";
+export { DefaultComposer } from "./Composer";
+export { DefaultConversationListScreen, DefaultConversationRow } from "./ConversationListScreen";
+export { DefaultChatWallpaper } from "./appearance";
+export { DefaultLinkified, DefaultMessageBubble, DefaultMessageList } from "./messages";
+export { DefaultInAppMessageBanners } from "./notifications";
+export { DefaultAppearanceSheet, DefaultAttachmentPreviewSheet, DefaultBlockedUsersScreen, DefaultDocumentViewer, DefaultImageLightbox, DefaultReportSheet } from "./sheets";
+export { DefaultConfirmDialog, DefaultConnectionBanner, DefaultDialog, DefaultIcon, DefaultLiveRegion, DefaultPopupMenu, DefaultToastStack } from "./ui";

@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useMemo } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { Icon, ScalePressable, useTheme, type Theme } from "../theme";
@@ -19,7 +20,7 @@ export interface AttachMenuProps {
 }
 
 /** Bottom sheet with one tile per picker (Photo, Camera, Video, Record video, Document, custom…). */
-export const AttachMenu = memo(function AttachMenu({ visible, pickers, onPicked, onClose, onError, insetBottom = 0, title = "Send" }: AttachMenuProps) {
+export const DefaultAttachMenu = memo(function AttachMenu({ visible, pickers, onPicked, onClose, onError, insetBottom = 0, title = "Send" }: AttachMenuProps) {
   const theme = useTheme();
   const s = useStyles(theme);
   if (!visible) return null;
@@ -87,3 +88,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const AttachMenu = slot("AttachMenu", DefaultAttachMenu);

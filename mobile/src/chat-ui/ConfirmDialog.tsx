@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useMemo } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { ScalePressable, shadowStyle, useTheme, type Theme } from "../theme";
@@ -16,7 +17,7 @@ export interface ConfirmDialogProps {
 }
 
 /** Small centred confirm dialog (themeable; no native Alert). */
-export const ConfirmDialog = memo(function ConfirmDialog({
+export const DefaultConfirmDialog = memo(function ConfirmDialog({
   visible,
   title,
   message,
@@ -68,3 +69,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const ConfirmDialog = slot("ConfirmDialog", DefaultConfirmDialog);

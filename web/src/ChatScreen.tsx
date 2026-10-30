@@ -1,3 +1,4 @@
+import { slot } from "./components";
 import React, { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import {
   checkAttachmentSize,
@@ -70,7 +71,7 @@ export interface ChatHeaderProps {
   clock?: ClockFormat;
 }
 
-export const ChatHeader: React.FC<ChatHeaderProps> = ({ peerId, name, avatar, status, lastSeen, typing, isBlocked, blockedByOther, onBack, onCall, actions, menuItems, clock }) => {
+export const DefaultChatHeader: React.FC<ChatHeaderProps> = ({ peerId, name, avatar, status, lastSeen, typing, isBlocked, blockedByOther, onBack, onCall, actions, menuItems, clock }) => {
   // One shared 60 s timer refreshes "last seen 5 min ago".
   useTicker(60000);
   const presence = headerStatus({ typing, status, lastSeen, isBlocked, blockedByOther, clock, now: new Date() });
@@ -161,7 +162,7 @@ export interface ChatScreenProps {
 
 const ICONS: Record<string, WebIconName> = { reply: "reply", copy: "copy", download: "download", share: "share", report: "flag", retry: "retry", deleteForMe: "trash", deleteForEveryone: "trash" };
 
-export const ChatScreen: React.FC<ChatScreenProps> = ({
+export const DefaultChatScreen: React.FC<ChatScreenProps> = ({
   peerId,
   chatId,
   onBack,
@@ -556,3 +557,7 @@ export const ChatScreen: React.FC<ChatScreenProps> = ({
     </section>
   );
 };
+
+// Host-replaceable (see components.tsx): the exported name looks up `components.<Name>`, falling back to the Default one.
+export const ChatHeader = slot("ChatHeader", DefaultChatHeader);
+export const ChatScreen = slot("ChatScreen", DefaultChatScreen);

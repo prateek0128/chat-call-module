@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useEffect, useRef } from "react";
 import { Animated, View } from "react-native";
 import { Avatar, useReducedMotion, useTheme } from "../theme";
@@ -14,7 +15,7 @@ export interface PulseAvatarProps {
 const LOOP_MS = 2000;
 
 /** Large avatar with 2 expanding rings (scale 1 -> 1.7 + fade, 2 s loop). No rings with reduced motion. */
-export const PulseAvatar = memo(function PulseAvatar({ name, id, uri, size = 128, pulsing = false }: PulseAvatarProps) {
+export const DefaultPulseAvatar = memo(function PulseAvatar({ name, id, uri, size = 128, pulsing = false }: PulseAvatarProps) {
   const theme = useTheme();
   const reduced = useReducedMotion();
   const rings = useRef([new Animated.Value(0), new Animated.Value(0)]).current;
@@ -63,3 +64,6 @@ export const PulseAvatar = memo(function PulseAvatar({ name, id, uri, size = 128
     </View>
   );
 });
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const PulseAvatar = slot("PulseAvatar", DefaultPulseAvatar);

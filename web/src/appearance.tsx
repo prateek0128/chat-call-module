@@ -3,8 +3,10 @@
  * per chat), persisted in localStorage. It renders the `.ck-root` element that carries the design
  * tokens as CSS variables, so wrap every commskit-web screen in it.
  */
+import { slot } from "./components";
 import React, { createContext, CSSProperties, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import {
+  applyDisplay,
   applyWallpaper,
   createTheme,
   DEFAULT_APPEARANCE,
@@ -18,12 +20,15 @@ import {
   type AppearanceMode,
   type AppearanceState,
   type ColorScheme,
+  type Density,
   type PresetName,
+  type TextSize,
   type Theme,
   type ThemeOverrides,
   type Wallpaper,
 } from "commskit/engine";
-import { isPresetName } from "commskit/engine";
+import { DENSITIES, isPresetName, TEXT_SIZES } from "commskit/engine";
+import { ComponentsProvider, type CommsComponents } from "./components";
 import { cx, kebab, safeLocalStorage } from "./util";
 
 export const APPEARANCE_STORAGE_KEY = "commskit.appearance.v1";
@@ -38,6 +43,8 @@ export interface SyncStorage {
 export interface AppearanceController {
   mode: AppearanceMode;
   preset: PresetName;
+  textSize: TextSize;
+  density: Density;
   /** Global wallpaper ("All chats"). */
   wallpaper: Wallpaper;
   /** Per-chat overrides by peer id. */
@@ -51,6 +58,8 @@ export interface AppearanceController {
   hasOverride: (peerId: string) => boolean;
   setMode: (mode: AppearanceMode) => void;
   setPreset: (preset: PresetName) => void;
+  setTextSize: (textSize: TextSize) => void;
+  setDensity: (density: Density) => void;
   /** Global wallpaper, or a chat's override with `{ peerId }`. */
   setWallpaper: (wallpaper: Wallpaper, options?: { peerId?: string | null }) => void;
   resetWallpaper: (peerId: string) => void;
@@ -68,6 +77,8 @@ const FALLBACK: AppearanceController = {
   hasOverride: () => false,
   setMode: noop,
   setPreset: noop,
+  setTextSize: noop,
+  setDensity: noop,
   setWallpaper: noop,
   resetWallpaper: noop,
   theme: FALLBACK_THEME,
@@ -133,6 +144,8 @@ export interface AppearanceProviderProps {
   onStorageError?: (error: unknown) => void;
   /** Host overrides applied on top of the tokens (the chat theme preset is set by the user). */
   theme?: Omit<ThemeOverrides, "preset">;
+  /** Replace built-in components (Avatar, MessageBubble, Composer, ConversationRow). Replacements get the default's props. */
+  components?: Partial<CommsComponents>;
   className?: string;
   style?: CSSProperties;
 }
@@ -146,6 +159,7 @@ export const AppearanceProvider: React.FC<AppearanceProviderProps> = ({
   onChange,
   onStorageError,
   theme: themeOverrides,
+  components,
   className,
   style,
 }) => {
@@ -192,7 +206,10 @@ export const AppearanceProvider: React.FC<AppearanceProviderProps> = ({
     [controlled, store, storageKey],
   );
 
-  const theme = useMemo(() => createTheme({ ...(themeOverrides || {}), preset: state.preset }, scheme), [themeOverrides, state.preset, scheme]);
+  const theme = useMemo(
+    () => applyDisplay(createTheme({ ...(themeOverrides || {}), preset: state.preset }, scheme), { textSize: state.textSize, density: state.density }),
+    [themeOverrides, state.preset, state.textSize, state.density, scheme],
+  );
 
   const controller = useMemo<AppearanceController>(
     () => ({
@@ -205,6 +222,8 @@ export const AppearanceProvider: React.FC<AppearanceProviderProps> = ({
       hasOverride: (peerId) => Object.prototype.hasOwnProperty.call(state.perChat, peerId),
       setMode: (mode) => update((s) => (s.mode === mode ? s : { ...s, mode })),
       setPreset: (preset) => update((s) => (s.preset === preset || !isPresetName(preset) ? s : { ...s, preset })),
+      setTextSize: (textSize) => update((s) => (s.textSize === textSize || !TEXT_SIZES.includes(textSize) ? s : { ...s, textSize })),
+      setDensity: (density) => update((s) => (s.density === density || !DENSITIES.includes(density) ? s : { ...s, density })),
       setWallpaper: (w, options) => update((s) => applyWallpaper(s, w, options && options.peerId)),
       resetWallpaper: (peerId) => update((s) => removeWallpaperOverride(s, peerId)),
     }),
@@ -216,7 +235,7 @@ export const AppearanceProvider: React.FC<AppearanceProviderProps> = ({
   return (
     <AppearanceContext.Provider value={controller}>
       <div className={cx("ck-root", className)} data-ck-scheme={scheme} data-ck-preset={state.preset} style={{ ...(vars as CSSProperties), ...style }}>
-        {children}
+        <ComponentsProvider components={components}>{children}</ComponentsProvider>
       </div>
     </AppearanceContext.Provider>
   );
@@ -225,7 +244,7 @@ export const AppearanceProvider: React.FC<AppearanceProviderProps> = ({
 // ---- wallpaper layer -----------------------------------------------------------------------------
 
 /** Chat background: default dots, solid, gradient or picture + dim overlay. Fills its (relative) parent. */
-export const ChatWallpaper: React.FC<{ wallpaper: Wallpaper; scheme?: ColorScheme; className?: string }> = ({ wallpaper, scheme, className }) => {
+export const DefaultChatWallpaper: React.FC<{ wallpaper: Wallpaper; scheme?: ColorScheme; className?: string }> = ({ wallpaper, scheme, className }) => {
   const app = useAppearance();
   const sch = scheme || app.scheme;
   const r = resolveWallpaper(wallpaper, sch, app.theme.colors.wallpaper);
@@ -251,3 +270,6 @@ export const ChatWallpaper: React.FC<{ wallpaper: Wallpaper; scheme?: ColorSchem
     </div>
   );
 };
+
+// Host-replaceable (see components.tsx): the exported name looks up `components.<Name>`, falling back to the Default one.
+export const ChatWallpaper = slot("ChatWallpaper", DefaultChatWallpaper);

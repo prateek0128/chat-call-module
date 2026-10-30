@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useOptionalBlocking } from "../moderation/hooks";
@@ -23,7 +24,7 @@ export interface ReportSheetProps {
 }
 
 /** Report a user: category (§7), optional reason, "Also block" (default on), then a confirmation. */
-export const ReportSheet = memo(function ReportSheet({
+export const DefaultReportSheet = memo(function ReportSheet({
   visible,
   peerId,
   name,
@@ -220,3 +221,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const ReportSheet = slot("ReportSheet", DefaultReportSheet);

@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useCallback, useMemo } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import type { Conversation } from "../chat/types";
@@ -22,7 +23,7 @@ export interface ConversationRowProps {
 
 export const displayName = (c: Pick<Conversation, "username" | "user_id">): string => (c.username && c.username.trim()) || `User ${c.user_id}`;
 
-export const ConversationRow = memo(function ConversationRow({ conversation, typing = false, selected = false, onPress, now, clock }: ConversationRowProps) {
+export const DefaultConversationRow = memo(function ConversationRow({ conversation, typing = false, selected = false, onPress, now, clock }: ConversationRowProps) {
   const theme = useTheme();
   const s = useStyles(theme);
   const name = displayName(conversation);
@@ -135,3 +136,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const ConversationRow = slot("ConversationRow", DefaultConversationRow);

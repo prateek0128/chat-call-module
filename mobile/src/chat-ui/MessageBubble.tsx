@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import React, { memo, useMemo, useState } from "react";
 import { ActivityIndicator, Image, Pressable, StyleSheet, Text, View, type ImageStyle, type StyleProp } from "react-native";
 import { isDeletedMessage, isSystemMessage, type ChatMessage } from "../chat/types";
@@ -46,7 +47,7 @@ export interface MessageBubbleProps {
 const IMAGE_WIDTH = 240;
 
 /** Text / image / file bubble (or a call entry chip) with inline time + ticks. */
-export const MessageBubble = memo(function MessageBubble({
+export const DefaultMessageBubble = memo(function MessageBubble({
   message,
   groupStart = true,
   maxWidth,
@@ -469,3 +470,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const MessageBubble = slot("MessageBubble", DefaultMessageBubble);

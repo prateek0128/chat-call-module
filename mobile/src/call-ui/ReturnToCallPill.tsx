@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo } from "react";
 import { Text } from "react-native";
 import { Icon, ScalePressable, shadowStyle, useTheme } from "../theme";
@@ -13,7 +14,7 @@ export interface ReturnToCallPillProps {
 }
 
 /** "Return to call · 01:23" pill shown while the call screen is minimised. */
-export const ReturnToCallPill = memo(function ReturnToCallPill({ onPress, peerName, connectedAt, status }: ReturnToCallPillProps) {
+export const DefaultReturnToCallPill = memo(function ReturnToCallPill({ onPress, peerName, connectedAt, status }: ReturnToCallPillProps) {
   const theme = useTheme();
   const timer = useCallTimer(connectedAt);
   const detail = connectedAt ? timer : status || "";
@@ -53,3 +54,6 @@ export const ReturnToCallPill = memo(function ReturnToCallPill({ onPress, peerNa
     </ScalePressable>
   );
 });
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const ReturnToCallPill = slot("ReturnToCallPill", DefaultReturnToCallPill);

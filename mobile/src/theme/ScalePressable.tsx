@@ -1,3 +1,4 @@
+import { slot } from "./slots";
 import { memo, ReactNode, useCallback, useRef } from "react";
 import { Animated, Pressable, type AccessibilityRole, type AccessibilityState, type Insets, type StyleProp, type ViewStyle } from "react-native";
 import { useReducedMotion } from "./hooks";
@@ -26,7 +27,7 @@ export interface ScalePressableProps {
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 /** Pressable that scales to 0.96 while pressed (`motion.duration.fast`, native driver; off with reduced motion). */
-export const ScalePressable = memo(function ScalePressable({
+export const DefaultScalePressable = memo(function ScalePressable({
   onPress,
   onLongPress,
   disabled,
@@ -71,3 +72,6 @@ export const ScalePressable = memo(function ScalePressable({
     </AnimatedPressable>
   );
 });
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const ScalePressable = slot("ScalePressable", DefaultScalePressable);

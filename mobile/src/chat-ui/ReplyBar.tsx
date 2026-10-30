@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { announce, Icon, ScalePressable, useReducedMotion, useTheme, type Theme } from "../theme";
@@ -12,7 +13,7 @@ export interface ReplyBarProps {
 }
 
 /** "Replying to {sender}: {snippet}" strip above the composer, with a cancel ✕. */
-export const ReplyBar = memo(function ReplyBar({ senderName, snippet, onCancel }: ReplyBarProps) {
+export const DefaultReplyBar = memo(function ReplyBar({ senderName, snippet, onCancel }: ReplyBarProps) {
   const theme = useTheme();
   const s = useStyles(theme);
   const reduced = useReducedMotion();
@@ -81,3 +82,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const ReplyBar = slot("ReplyBar", DefaultReplyBar);

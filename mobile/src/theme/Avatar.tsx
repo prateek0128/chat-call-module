@@ -1,6 +1,7 @@
 import { memo, useEffect, useState } from "react";
 import { Image, Text, View, type StyleProp, type ViewStyle } from "react-native";
 import { avatarColor, initialsOf } from "./avatarColors";
+import { slot } from "./slots";
 import { useTheme } from "./ThemeProvider";
 
 export interface AvatarProps {
@@ -18,8 +19,8 @@ export interface AvatarProps {
   style?: StyleProp<ViewStyle>;
 }
 
-/** Image avatar with an initials fallback on a palette colour, plus an optional presence dot. */
-export const Avatar = memo(function Avatar({ name, id, uri, size = 48, online, ringColor, style }: AvatarProps) {
+/** Image avatar with an initials fallback on a palette colour, plus an optional presence dot (a host replacement may render this). */
+export const DefaultAvatar = memo(function Avatar({ name, id, uri, size = 48, online, ringColor, style }: AvatarProps) {
   const theme = useTheme();
   const [failed, setFailed] = useState(false);
   useEffect(() => setFailed(false), [uri]);
@@ -68,3 +69,5 @@ export const Avatar = memo(function Avatar({ name, id, uri, size = 48, online, r
     </View>
   );
 });
+
+export const Avatar = slot("Avatar", DefaultAvatar);

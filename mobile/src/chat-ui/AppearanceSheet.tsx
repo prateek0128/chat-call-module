@@ -3,6 +3,7 @@
  * with a `peerId`, Scope ("This chat" / "All chats" + "Reset this chat"). Changes apply instantly
  * through `useAppearance()`; there is no Save button. Needs an <AppearanceProvider> above it.
  */
+import { slot } from "../theme";
 import { memo, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { Image, Modal, Pressable, ScrollView, StyleSheet, Text, View, type AccessibilityActionEvent } from "react-native";
 import {
@@ -16,6 +17,8 @@ import {
   useTheme,
   wallpapers,
   type AppearanceMode,
+  type Density,
+  type TextSize,
   type Theme,
   type Wallpaper,
 } from "../theme";
@@ -46,6 +49,16 @@ export interface AppearanceSheetProps {
   title?: string;
 }
 
+const TEXT_SIZE_LABELS: Array<[TextSize, string]> = [
+  ["small", "Small"],
+  ["medium", "Medium"],
+  ["large", "Large"],
+];
+const DENSITY_LABELS: Array<[Density, string]> = [
+  ["comfortable", "Comfortable"],
+  ["compact", "Compact"],
+];
+
 const MODES: Array<[AppearanceMode, string]> = [
   ["system", "Auto"],
   ["light", "Light"],
@@ -61,7 +74,7 @@ const sameWallpaper = (a: Wallpaper, b: Wallpaper): boolean => {
   return true;
 };
 
-export const AppearanceSheet = memo(function AppearanceSheet({
+export const DefaultAppearanceSheet = memo(function AppearanceSheet({
   visible,
   onClose,
   peerId,
@@ -165,6 +178,32 @@ export const AppearanceSheet = memo(function AppearanceSheet({
                     accessibilityState={{ checked: on }}
                     accessibilityLabel={label}
                   >
+                    <Text style={[s.segmentText, on && s.segmentTextOn]}>{label}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+
+            {/* Text size */}
+            <Text style={s.section}>Text size</Text>
+            <View style={s.segmented} accessibilityRole="radiogroup" accessibilityLabel="Text size">
+              {TEXT_SIZE_LABELS.map(([size, label]) => {
+                const on = appearance.textSize === size;
+                return (
+                  <Pressable key={size} onPress={() => appearance.setTextSize(size)} style={[s.segment, on && s.segmentOn]} accessibilityRole="radio" accessibilityState={{ checked: on }} accessibilityLabel={label}>
+                    <Text style={[s.segmentText, on && s.segmentTextOn]}>{label}</Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+
+            {/* Density */}
+            <Text style={s.section}>Density</Text>
+            <View style={s.segmented} accessibilityRole="radiogroup" accessibilityLabel="Density">
+              {DENSITY_LABELS.map(([density, label]) => {
+                const on = appearance.density === density;
+                return (
+                  <Pressable key={density} onPress={() => appearance.setDensity(density)} style={[s.segment, on && s.segmentOn]} accessibilityRole="radio" accessibilityState={{ checked: on }} accessibilityLabel={label}>
                     <Text style={[s.segmentText, on && s.segmentTextOn]}>{label}</Text>
                   </Pressable>
                 );
@@ -395,3 +434,5 @@ const useStyles = (theme: Theme) =>
     [theme],
   );
 
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const AppearanceSheet = slot("AppearanceSheet", DefaultAppearanceSheet);

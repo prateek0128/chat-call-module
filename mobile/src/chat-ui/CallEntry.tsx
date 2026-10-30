@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useMemo } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import type { ChatMessage } from "../chat/types";
@@ -14,7 +15,7 @@ export interface CallEntryProps {
 }
 
 /** Centred chip: direction icon, title, detail · time, optional "Call back". */
-export const CallEntry = memo(function CallEntry({ message, onCallBack, clock }: CallEntryProps) {
+export const DefaultCallEntry = memo(function CallEntry({ message, onCallBack, clock }: CallEntryProps) {
   const theme = useTheme();
   const s = useStyles(theme);
   const call = describeCallEntry(message);
@@ -97,3 +98,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const CallEntry = slot("CallEntry", DefaultCallEntry);

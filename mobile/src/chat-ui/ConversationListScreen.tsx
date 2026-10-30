@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, ReactNode, useCallback, useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useConversations, useUnreadCount } from "../chat";
@@ -49,7 +50,7 @@ export interface ConversationListScreenProps {
 }
 
 /** Ready-made inbox: header ("Chats"), connection banner, search, live conversation list. */
-export const ConversationListScreen = memo(function ConversationListScreen({
+export const DefaultConversationListScreen = memo(function ConversationListScreen({
   onOpenConversation,
   selectedPeerId,
   title = "Chats",
@@ -157,3 +158,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const ConversationListScreen = slot("ConversationListScreen", DefaultConversationListScreen);

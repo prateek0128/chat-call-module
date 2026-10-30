@@ -1,3 +1,4 @@
+import { slot } from "./slots";
 import { memo } from "react";
 import { Text } from "react-native";
 import { DEFAULT_GLYPHS, type IconName } from "./iconNames";
@@ -10,7 +11,7 @@ export interface IconProps {
 }
 
 /** Glyph icon, or the host's icon via `<ThemeProvider renderIcon>`. Decorative: label the button, not the icon. */
-export const Icon = memo(function Icon({ name, size, color }: IconProps) {
+export const DefaultIcon = memo(function Icon({ name, size, color }: IconProps) {
   const theme = useTheme();
   const render = useIconRenderer();
   const s = size ?? theme.font.size.title;
@@ -28,3 +29,6 @@ export const Icon = memo(function Icon({ name, size, color }: IconProps) {
     </Text>
   );
 });
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const Icon = slot("Icon", DefaultIcon);

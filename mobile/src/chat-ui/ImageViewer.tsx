@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo } from "react";
 import { Image, Modal, StyleSheet, Text, View } from "react-native";
 import { Icon, ScalePressable, useSafeInsets, useTheme, type EdgeInsets, type Theme } from "../theme";
@@ -26,7 +27,7 @@ export interface ImageViewerProps {
 }
 
 /** Full-screen image viewer (Modal). Android back / the close button dismiss it. */
-export const ImageViewer = memo(function ImageViewer({ uri, onClose, insets, onDownload, onShare, downloadLabel = "Save" }: ImageViewerProps) {
+export const DefaultImageViewer = memo(function ImageViewer({ uri, onClose, insets, onDownload, onShare, downloadLabel = "Save" }: ImageViewerProps) {
   const theme = useTheme();
   const safe = useSafeInsets(insets);
   if (!uri) return null;
@@ -71,3 +72,6 @@ export const ImageViewer = memo(function ImageViewer({ uri, onClose, insets, onD
     </Modal>
   );
 });
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const ImageViewer = slot("ImageViewer", DefaultImageViewer);

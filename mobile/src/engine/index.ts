@@ -129,6 +129,8 @@ export { tokens, colorTokens, avatarPalette, radius, space, font, shadow, motion
 export type { ColorName, ColorScheme, ColorTokens, PresetName, PresetColors } from "../theme/tokens";
 export { createTheme, isPresetName, resolveScheme } from "../theme/createTheme";
 export type { Theme, ThemeOverrides } from "../theme/createTheme";
+export { applyDisplay, DENSITIES, TEXT_SIZES } from "../theme/display";
+export type { Density, TextSize } from "../theme/display";
 export { decideLayout, MAX_CONTENT_WIDTH } from "../theme/layout";
 export type { LayoutDecision } from "../theme/layout";
 export { avatarColor, initialsOf } from "../theme/avatarColors";

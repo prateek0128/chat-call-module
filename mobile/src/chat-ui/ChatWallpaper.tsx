@@ -7,6 +7,7 @@
  *   else the first stop as a solid colour.
  * - image: <Image resizeMode="cover"> + a dim overlay View; falls back to the base colour on error.
  */
+import { slot } from "../theme";
 import { memo, ReactNode, useEffect, useState, type ComponentType } from "react";
 import { Image, StyleSheet, View, type StyleProp, type ViewStyle } from "react-native";
 import { resolveWallpaper, useAppearance, useTheme, type Wallpaper } from "../theme";
@@ -50,7 +51,7 @@ const resolveLinearGradient = (): LinearGradientComponent | null => {
   return linearGradient as LinearGradientComponent | null;
 };
 
-export const ChatWallpaper = memo(function ChatWallpaper({ wallpaper, peerId, renderGradient, pattern = true, style, children, testID }: ChatWallpaperProps) {
+export const DefaultChatWallpaper = memo(function ChatWallpaper({ wallpaper, peerId, renderGradient, pattern = true, style, children, testID }: ChatWallpaperProps) {
   const theme = useTheme();
   const appearance = useAppearance();
   const chosen = wallpaper ?? appearance.wallpaperFor(peerId);
@@ -116,3 +117,6 @@ export const ChatWallpaper = memo(function ChatWallpaper({ wallpaper, peerId, re
 });
 
 const styles = StyleSheet.create({ root: { overflow: "hidden" } });
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const ChatWallpaper = slot("ChatWallpaper", DefaultChatWallpaper);

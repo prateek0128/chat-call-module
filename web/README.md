@@ -135,6 +135,24 @@ the user's chosen theme preset is applied on top. Props: `storage` (any `{getIte
 
 Style hooks: classes are prefixed `ck-`; override variables on `.ck-root` or rules in your own CSS loaded after `styles.css`.
 
+**What end users can change** (Appearance sheet, saved per browser): colour mode, chat theme, wallpaper (solid, gradient or their own photo; all chats or one chat), **text size** (small / medium / large) and **density** (comfortable / compact). `useAppearance()` exposes `textSize`, `density`, `setTextSize` and `setDensity`.
+
+Full guide: [Customizing the UI](../docs/web/04-customizing-the-ui.md).
+
+**Replacing components** (developers): pass `components` to `AppearanceProvider`. A replacement gets the same props as the built-in, so it keeps the full chat behaviour, and may render the built-in itself.
+
+```tsx
+import { AppearanceProvider, DefaultAvatar, type CommsComponents } from "commskit-web";
+
+const MyBubble: CommsComponents["MessageBubble"] = ({ message }) => <div className="my-bubble">{message.content}</div>;
+
+<AppearanceProvider components={{ MessageBubble: MyBubble, Avatar: (p) => <DefaultAvatar {...p} size={32} /> }}>...</AppearanceProvider>
+```
+
+Every UI component is a slot (`CommsComponents`): `ChatApp`, `ChatScreen`, `ChatHeader`, `MessageList`, `MessageBubble`, `Linkified`, `Composer`, `ConversationListScreen`, `ConversationRow`, `Avatar`, `Icon`, `Dialog`, `ConfirmDialog`, `PopupMenu`, `ToastStack`, `LiveRegion`, `ConnectionBanner`, `ChatWallpaper`, `InAppMessageBanners`, `AppearanceSheet`, `ReportSheet`, `BlockedUsersScreen`, `AttachmentPreviewSheet`, `ImageLightbox`, `DocumentViewer`. The built-ins are exported as `Default<Name>`.
+
+**Fully custom UI:** skip the components and build your own on the headless hooks (`useChat`, `useConversations`, `useConversation`, `useUserProfile`, `useChatErrors`, `useConnectionStatus`, `useBlocking`, `useUnreadCount`); they hold all the chat logic and no markup.
+
 ## Notifications
 
 ```tsx

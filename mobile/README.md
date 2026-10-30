@@ -541,9 +541,31 @@ Icon names:
 
 Return `undefined` from `renderIcon` to keep the built-in glyph.
 
+### Replacing components
+
+Full guide: [Customizing the UI](../docs/mobile/04-customizing-the-ui.md).
+
+Pass `components` to `ThemeProvider` (or `AppearanceProvider`). A replacement receives the same props as the built-in, so it keeps the full chat behaviour, and may render the built-in itself.
+
+```tsx
+import { DefaultAvatar, ThemeProvider } from "commskit/theme";
+import type { ChatUiSlots } from "commskit/chat-ui";
+
+const components = {
+  MessageBubble: MyBubble,
+  Avatar: (p) => <DefaultAvatar {...p} size={32} />,
+} satisfies ChatUiSlots;
+
+<ThemeProvider components={components}>...</ThemeProvider>
+```
+
+Every UI component is a slot: `Avatar`, `Icon`, `ScalePressable` (theme); the chat-ui components in `ChatUiSlots` (`ChatScreen`, `ChatHeader`, `MessageList`, `MessageBubble`, `Composer`, `ConversationList`, `ConversationRow`, sheets, viewers, banners and more); and the call-ui components in `CallUiSlots` (`CallScreen`, `CallOverlay`, `CallControls`, `CallButton`, `CallBackground`, `PulseAvatar`, `ReturnToCallPill`). The built-ins are exported as `Default<Name>`.
+
+**Fully custom UI:** skip the components and build your own on the headless hooks and providers (`commskit/chat`, `commskit/call`, `commskit/core`); they hold all the chat and call logic and no markup.
+
 ### Appearance (themes & wallpapers)
 
-Users pick a colour mode (Auto / Light / Dark), a chat theme (7 presets from
+Users pick a colour mode (Auto / Light / Dark), a **text size** (small / medium / large), a **density** (comfortable / compact), a chat theme (7 presets from
 `tokens.json → themePresets`) and a chat wallpaper (default, solid, gradient or their own photo),
 globally or per chat. These are local device preferences; nothing is sent to the other person.
 See "Appearance: chat themes and wallpapers" in [`../design/DESIGN_SYSTEM.md`](../design/DESIGN_SYSTEM.md).

@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -77,7 +78,7 @@ const VIEWABILITY = { itemVisiblePercentThreshold: 10 };
  * keep their position by inversion. A jump-to-latest button appears after scrolling up more
  * than one screen and counts new incoming messages.
  */
-export const MessageList = memo(function MessageList({
+export const DefaultMessageList = memo(function MessageList({
   messages,
   loading = false,
   loadingMore = false,
@@ -423,3 +424,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const MessageList = slot("MessageList", DefaultMessageList);

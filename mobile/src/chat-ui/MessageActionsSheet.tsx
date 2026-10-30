@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useEffect, useMemo, useRef } from "react";
 import { Animated, Modal, Pressable, StyleSheet, Text } from "react-native";
 import type { ChatMessage } from "../chat/types";
@@ -17,7 +18,7 @@ export interface MessageActionsSheetProps {
 }
 
 /** Bottom sheet for a long-pressed message: a one-line preview, then the actions. */
-export const MessageActionsSheet = memo(function MessageActionsSheet({ message, actions, onSelect, onClose, insetBottom = 0 }: MessageActionsSheetProps) {
+export const DefaultMessageActionsSheet = memo(function MessageActionsSheet({ message, actions, onSelect, onClose, insetBottom = 0 }: MessageActionsSheetProps) {
   const theme = useTheme();
   const s = useStyles(theme);
   const reduced = useReducedMotion();
@@ -108,3 +109,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const MessageActionsSheet = slot("MessageActionsSheet", DefaultMessageActionsSheet);

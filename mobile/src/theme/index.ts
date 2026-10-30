@@ -28,6 +28,7 @@ export {
   type PresetName,
   type WallpaperSchemeTokens,
 } from "./tokens";
+export { applyDisplay, DEFAULT_DENSITY, DEFAULT_TEXT_SIZE, DENSITIES, isDensity, isTextSize, TEXT_SIZES, type Density, type TextSize } from "./display";
 export { createTheme, isPresetName, darkTheme, lightTheme, lineHeightFor, resolveScheme, shadowStyle, type Theme, type ThemeOverrides } from "./createTheme";
 export { gradientStops, mixColor, parseColor, toColorString, withAlpha, type Rgba } from "./color";
 export { decideLayout, MAX_CONTENT_WIDTH, type LayoutDecision, type LayoutTokens } from "./layout";
@@ -36,9 +37,10 @@ export { DEFAULT_GLYPHS, type IconName } from "./iconNames";
 export { ThemeProvider, useIconRenderer, useTheme, type IconRenderer, type IconRenderProps, type ThemeProviderProps } from "./ThemeProvider";
 export { announce, useReducedMotion, useResponsiveLayout } from "./hooks";
 export { useSafeInsets, ZERO_INSETS, type EdgeInsets } from "./safeArea";
-export { Avatar, type AvatarProps } from "./Avatar";
-export { Icon, type IconProps } from "./Icon";
-export { ScalePressable, type ScalePressableProps } from "./ScalePressable";
+export { Avatar, DefaultAvatar, type AvatarProps } from "./Avatar";
+export { slot, SlotsProvider, type ComponentSlots } from "./slots";
+export { DefaultIcon, Icon, type IconProps } from "./Icon";
+export { DefaultScalePressable, ScalePressable, type ScalePressableProps } from "./ScalePressable";
 export { slopFor, type SlopInsets } from "./touch";
 export {
   applyWallpaper,

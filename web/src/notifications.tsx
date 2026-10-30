@@ -1,4 +1,5 @@
 /** Desktop notifications (Notification API) and in-app banners for messages from other chats. */
+import { slot } from "./components";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { BANNER_AUTO_HIDE_MS, bannerText, primeSeen, scanForBanners, SeenSet, type ChatMessage } from "commskit/engine";
 import { useChatContext, useConversations, useUserProfile } from "./providers";
@@ -137,7 +138,7 @@ const BannerButton: React.FC<{ item: BannerItem; onOpen: () => void }> = ({ item
 };
 
 /** Toast-style banner for a new message in a chat that is not open (tab visible). Click opens the chat. */
-export const InAppMessageBanners: React.FC<{ onOpenChat: (peerId: string) => void; enabled?: boolean }> = ({ onOpenChat, enabled = true }) => {
+export const DefaultInAppMessageBanners: React.FC<{ onOpenChat: (peerId: string) => void; enabled?: boolean }> = ({ onOpenChat, enabled = true }) => {
   const { store } = useChatContext();
   const visible = useTabVisible();
   const [items, setItems] = useState<BannerItem[]>([]);
@@ -172,3 +173,6 @@ export const InAppMessageBanners: React.FC<{ onOpenChat: (peerId: string) => voi
     </div>
   );
 };
+
+// Host-replaceable (see components.tsx): the exported name looks up `components.<Name>`, falling back to the Default one.
+export const InAppMessageBanners = slot("InAppMessageBanners", DefaultInAppMessageBanners);

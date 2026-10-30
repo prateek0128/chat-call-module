@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useEffect, useMemo, useState } from "react";
 import { ActivityIndicator, Linking, Modal, StyleSheet, Text, View } from "react-native";
 import { Icon, ScalePressable, useSafeInsets, useTheme, type EdgeInsets, type Theme } from "../theme";
@@ -29,7 +30,7 @@ export const documentViewerAvailable = (): boolean => !!getWebView();
  * In-app document viewer on react-native-webview (optional peer). Without it, opens the file with
  * `Linking.openURL` and closes.
  */
-export const DocumentViewerModal = memo(function DocumentViewerModal({ uri, name, onClose, documentViewerUrl, onShare, insets }: DocumentViewerModalProps) {
+export const DefaultDocumentViewerModal = memo(function DocumentViewerModal({ uri, name, onClose, documentViewerUrl, onShare, insets }: DocumentViewerModalProps) {
   const theme = useTheme();
   const s = useStyles(theme);
   const safe = useSafeInsets(insets);
@@ -129,3 +130,6 @@ const useStyles = (theme: Theme) =>
       }),
     [theme],
   );
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const DocumentViewerModal = slot("DocumentViewerModal", DefaultDocumentViewerModal);

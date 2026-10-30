@@ -1,3 +1,4 @@
+import { slot } from "../theme";
 import { memo, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { gradientStops, useTheme } from "../theme";
@@ -12,7 +13,7 @@ export interface CallBackgroundProps {
  * bands of interpolated colour. Pass `renderBackground` to CallScreen / CallOverlay to use
  * expo-linear-gradient (or anything else) instead.
  */
-export const CallBackground = memo(function CallBackground({ steps = 16 }: CallBackgroundProps) {
+export const DefaultCallBackground = memo(function CallBackground({ steps = 16 }: CallBackgroundProps) {
   const theme = useTheme();
   const colors = useMemo(
     () => gradientStops(theme.colors.callBackgroundStart, theme.colors.callBackgroundEnd, steps),
@@ -26,3 +27,6 @@ export const CallBackground = memo(function CallBackground({ steps = 16 }: CallB
     </View>
   );
 });
+
+// Host-replaceable (see theme/slots.tsx): the exported name renders `components.<Name>` when given, else the Default one.
+export const CallBackground = slot("CallBackground", DefaultCallBackground);

@@ -2,7 +2,7 @@
 
 What the mobile package is, what is inside, and what is (and is not) verified.
 
-Next: [02 Keys, secrets, WebSockets and placeholders](02-keys-secrets-websockets-and-placeholders.md) · [03 Using, running and deploying](03-using-running-and-deploying.md) · Example app: [mobile-example](../example/mobile-example.md)
+Next: [02 Keys, secrets, WebSockets and placeholders](02-keys-secrets-websockets-and-placeholders.md) · [03 Using, running and deploying](03-using-running-and-deploying.md) · [04 Customizing the UI](04-customizing-the-ui.md) · Example app: [mobile-example](../example/mobile-example.md)
 
 ## Contents
 

@@ -15,12 +15,16 @@ import {
 } from "./appearance";
 import { APPEARANCE_STORAGE_KEY, defaultAppearanceStorage, loadAppearance, saveAppearance, type AppearanceStorage } from "./appearanceStorage";
 import { isPresetName, type Theme, type ThemeOverrides } from "./createTheme";
+import { isDensity, isTextSize, type Density, type TextSize } from "./display";
+import type { ComponentSlots } from "./slots";
 import { ThemeProvider, type IconRenderer } from "./ThemeProvider";
 import type { ColorScheme, PresetName } from "./tokens";
 
 export interface AppearanceController {
   mode: AppearanceMode;
   preset: PresetName;
+  textSize: TextSize;
+  density: Density;
   /** Global wallpaper ("All chats"). */
   wallpaper: Wallpaper;
   /** Per-chat overrides by peer id. */
@@ -35,6 +39,8 @@ export interface AppearanceController {
   hasOverride: (peerId: string) => boolean;
   setMode: (mode: AppearanceMode) => void;
   setPreset: (preset: PresetName) => void;
+  setTextSize: (textSize: TextSize) => void;
+  setDensity: (density: Density) => void;
   /** Global wallpaper, or a chat's override with `{ peerId }`. */
   setWallpaper: (wallpaper: Wallpaper, options?: { peerId?: string | null }) => void;
   /** Removes a chat's override. */
@@ -50,6 +56,8 @@ const FALLBACK: AppearanceController = {
   hasOverride: () => false,
   setMode: noop,
   setPreset: noop,
+  setTextSize: noop,
+  setDensity: noop,
   setWallpaper: noop,
   resetWallpaper: noop,
 };
@@ -75,6 +83,8 @@ export interface AppearanceProviderProps {
   /** Forwarded to the wrapped <ThemeProvider>. */
   theme?: ThemeOverrides | Theme | ((scheme: ColorScheme, preset: PresetName) => Theme);
   renderIcon?: IconRenderer;
+  /** Forwarded to the wrapped <ThemeProvider>: replace built-in components. */
+  components?: ComponentSlots;
   /** Set false if you render your own <ThemeProvider> (read `useAppearance()` for mode/preset). */
   wrapThemeProvider?: boolean;
 }
@@ -89,6 +99,7 @@ export const AppearanceProvider: React.FC<AppearanceProviderProps> = ({
   onStorageError,
   theme,
   renderIcon,
+  components,
   wrapThemeProvider = true,
 }) => {
   const controlled = value !== undefined;
@@ -144,6 +155,8 @@ export const AppearanceProvider: React.FC<AppearanceProviderProps> = ({
       hasOverride: (peerId) => Object.prototype.hasOwnProperty.call(state.perChat, peerId),
       setMode: (mode) => update((s) => (s.mode === mode ? s : { ...s, mode })),
       setPreset: (preset) => update((s) => (s.preset === preset || !isPresetName(preset) ? s : { ...s, preset })),
+      setTextSize: (textSize) => update((s) => (s.textSize === textSize || !isTextSize(textSize) ? s : { ...s, textSize })),
+      setDensity: (density) => update((s) => (s.density === density || !isDensity(density) ? s : { ...s, density })),
       setWallpaper: (w, options) => update((s) => applyWallpaper(s, w, options && options.peerId)),
       resetWallpaper: (peerId) => update((s) => removeWallpaperOverride(s, peerId)),
     }),
@@ -153,7 +166,7 @@ export const AppearanceProvider: React.FC<AppearanceProviderProps> = ({
   );
 
   const content = wrapThemeProvider ? (
-    <ThemeProvider theme={theme} colorScheme={state.mode} preset={state.preset} renderIcon={renderIcon}>
+    <ThemeProvider theme={theme} colorScheme={state.mode} preset={state.preset} textSize={state.textSize} density={state.density} renderIcon={renderIcon} components={components}>
       {children}
     </ThemeProvider>
   ) : (

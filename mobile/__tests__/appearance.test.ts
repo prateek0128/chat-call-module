@@ -8,6 +8,7 @@ import {
   parseAppearance,
   removeWallpaperOverride,
   resolveWallpaper,
+  sanitizeAppearance,
   sanitizeWallpaper,
   serializeAppearance,
   wallpaperForPeer,
@@ -149,6 +150,8 @@ describe("persistence", () => {
   const state: AppearanceState = {
     mode: "dark",
     preset: "emerald",
+    textSize: "large",
+    density: "compact",
     wallpaper: { kind: "gradient", index: 2 },
     perChat: { "peer-1": { kind: "image", uri: "file:///w.jpg", dim: 0.4 }, "peer-2": { kind: "solid", index: 0 } },
   };
@@ -180,5 +183,31 @@ describe("persistence", () => {
     const failing = { getItem: () => Promise.reject(new Error("io")), setItem: () => Promise.reject(new Error("full")), removeItem: () => Promise.resolve() };
     expect(await loadAppearance(failing)).toEqual(DEFAULT_APPEARANCE);
     await expect(saveAppearance(failing, state)).rejects.toThrow("full");
+  });
+});
+
+describe("display preferences (text size, density)", () => {
+  const { applyDisplay } = jest.requireActual("../src/theme/display");
+  const { createTheme } = require("../src/theme/createTheme");
+
+  it("sanitize keeps valid values and falls back for invalid ones", () => {
+    expect(sanitizeAppearance({ textSize: "large", density: "compact" })).toMatchObject({ textSize: "large", density: "compact" });
+    expect(sanitizeAppearance({ textSize: "huge", density: 3 })).toMatchObject({ textSize: "medium", density: "comfortable" });
+    expect(sanitizeAppearance(null)).toMatchObject({ textSize: "medium", density: "comfortable" });
+  });
+
+  it("round-trips through storage", () => {
+    const s = { ...sanitizeAppearance(null), textSize: "small" as const, density: "compact" as const };
+    expect(parseAppearance(serializeAppearance(s))).toMatchObject({ textSize: "small", density: "compact" });
+  });
+
+  it("applyDisplay scales fonts and spacing; defaults return the same theme", () => {
+    const base = createTheme({}, "light");
+    expect(applyDisplay(base, {})).toBe(base);
+    const big = applyDisplay(base, { textSize: "large", density: "compact" });
+    expect(big.font.size.body).toBeGreaterThan(base.font.size.body);
+    expect(big.space.lg).toBeLessThan(base.space.lg);
+    expect(applyDisplay(base, { textSize: "small" }).font.size.body).toBeLessThan(base.font.size.body);
+    expect(big.space.xxs).toBeGreaterThanOrEqual(1);
   });
 });
